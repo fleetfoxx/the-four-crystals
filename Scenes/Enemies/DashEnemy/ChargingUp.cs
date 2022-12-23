@@ -3,10 +3,10 @@ using Godot;
 
 namespace Enemies.DashEnemy
 {
-    public class Idle : EnemyState
+    public class ChargingUp : EnemyState
     {
         [Export]
-        private float _idleDuration = 5;
+        private float _duration = 5;
 
         private Timer _timer;
 
@@ -22,13 +22,18 @@ namespace Enemies.DashEnemy
         public override void Enter()
         {
             base.Enter();
-            _timer.Start(_idleDuration);
+            _timer.Start(_duration);
             _owner.Velocity = Vector2.Zero;
+        }
+
+        public override void Exit() {
+            base.Exit();
+            _timer.Stop();
         }
 
         private void OnTimeout()
         {
-            TransitionTo(nameof(Wandering));
+            TransitionTo(nameof(Attacking));
         }
     }
 }

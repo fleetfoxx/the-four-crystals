@@ -1,15 +1,19 @@
 using Godot;
 using System;
+using System.Diagnostics;
 
-public abstract class EnemyState : StateNode
+namespace Enemies
 {
-    [Signal]
-    public delegate void MoveSignal(Vector2 velocityDelta);
-
-    public virtual void Init(Enemy self, Node2D target) { }
-
-    protected void Move(Vector2 velocityDelta)
+    public abstract class EnemyState : StateNode
     {
-        EmitSignal(nameof(MoveSignal), velocityDelta);
+        protected Enemy _owner;
+
+        public override void Enter()
+        {
+            _owner = GetOwnerOrNull<Enemy>();
+            Debug.Assert(_owner != null);
+        }
+
+        public virtual void Init(Node2D target) { }
     }
 }

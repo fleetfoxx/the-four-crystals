@@ -5,43 +5,54 @@ namespace Enemies.DashEnemy
 {
     public class Attacking : EnemyState
     {
+        [Export]
+        private float _attackSpeed = 50;
+
+        [Export]
+        private float _attackDuration = 2;
+
         private Timer _timer;
-        private Enemy _self;
         private Node2D _target;
+        private Vector2 _attackDirection = Vector2.Zero;
 
-        public override void Init(Enemy self, Node2D target)
+        public override void _Ready()
         {
-            Debug.Assert(self != null);
-            Debug.Assert(target != null);
+            base._Ready();
 
-            _self = self;
+            _timer = GetNodeOrNull<Timer>("AttackTimer");
+            Debug.Assert(_timer != null);
+            _timer.Connect("timeout", this, nameof(OnTimeout));
+        }
+
+        public override void Init(Node2D target)
+        {
+            Debug.Assert(target != null);
             _target = target;
         }
 
         public override void Enter()
         {
-            _timer = new Timer();
-            _timer.WaitTime = 5;
-            _timer.OneShot = false;
-            AddChild(_timer);
-            _timer.Connect("timeout", this, nameof(Dash));
-            _timer.Start();
+            base.Enter();
+            _timer.Start(_attackDuration);
+            _attackDirection = _owner.GlobalPosition
+                .DirectionTo(_target.GlobalPosition)
+                .Normalized();
         }
 
         public override void Exit()
         {
-            RemoveChild(_timer);
+            base.Exit();
+            _timer.Stop();
         }
 
-        private void Dash()
+        public override void Process(float delta)
         {
-            Debug.WriteLine("Dash");
+            _owner.Velocity = _attackDirection * _attackSpeed;
+        }
 
-            var dashDirection = _self.GlobalPosition
-                .DirectionTo(_target.GlobalPosition)
-                .Normalized();
-
-            Move(dashDirection * 10);
+        private void OnTimeout()
+        {
+            TransitionTo(nameof(ChargingUp));
         }
     }
 }

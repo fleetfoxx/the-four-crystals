@@ -4,16 +4,19 @@ using System.Diagnostics;
 
 public class FollowCamera : Camera2D
 {
-    private Node2D Target;
+    [Export]
+    private float _stiffness = 10f;
+
+    private Node2D _target;
 
     public override void _Ready()
     {
-        Target = GetNodeOrNull<Player>("../Player");
-        Debug.Assert(Target != null);
+        _target = GetNodeOrNull<Player.Player>("../Player");
+        Debug.Assert(_target != null);
     }
 
     public override void _Process(float delta)
     {
-        Position = Position.LinearInterpolate(Target.Position, 0.1f);
+        Position = Position.LinearInterpolate(_target.Position, _stiffness * delta);
     }
 }

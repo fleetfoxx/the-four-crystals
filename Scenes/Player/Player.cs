@@ -2,69 +2,62 @@ using Godot;
 using System;
 using System.Diagnostics;
 
-public class Player : KinematicBody2D
+namespace Player
 {
-    private const float BASICALLY_ZERO = 0.01f;
-
-    [Export]
-    private float Speed = 50;
-
-    [Export]
-    public readonly float DodgeSpeed = 75;
-
-    [Export]
-    private float Friction = 0.25f;
-
-    private PlayerStateMachine _stateMachine;
-    private Area2D _hitBox;
-    private Label _stateLabel;
-
-    public Vector2 Velocity = Vector2.Zero;
-
-    public override void _Ready()
+    public class Player : KinematicBody2D
     {
-        _stateMachine = GetNodeOrNull<PlayerStateMachine>("PlayerStateMachine");
-        Debug.Assert(_stateMachine != null);
-        _stateMachine.Connect(nameof(PlayerStateMachine.OnMoveSignal), this, nameof(HandleMove));
+        private PlayerStateMachine _stateMachine;
+        private Area2D _hitBox;
+        private Area2D _feetBox;
+        private Label _stateLabel;
 
-        _hitBox = GetNodeOrNull<Area2D>("HitBox");
-        Debug.Assert(_hitBox != null);
-        _hitBox.Connect("area_entered", this, nameof(HandleHitBoxCollision));
+        public Vector2 Velocity = Vector2.Zero;
 
-        _stateLabel = GetNodeOrNull<Label>("StateLabel");
-    }
-
-    public override void _Process(float delta)
-    {
-        if (_stateLabel.Text != null)
+        public override void _Ready()
         {
-            _stateLabel.Text = _stateMachine.GetStateName();
-        }
-    }
+            _stateMachine = GetNodeOrNull<PlayerStateMachine>("PlayerStateMachine");
+            Debug.Assert(_stateMachine != null);
 
-    public override void _PhysicsProcess(float delta)
-    {
-        Velocity = Velocity.LinearInterpolate(Vector2.Zero, Friction);
-        Velocity = MoveAndSlide(Velocity);
+            _hitBox = GetNodeOrNull<Area2D>("HitBox");
+            Debug.Assert(_hitBox != null);
+            _hitBox.Connect("area_entered", this, nameof(HandleHitBoxCollision));
 
-        // Snap to 0 when the lerp gets small.
-        if (Velocity.x < BASICALLY_ZERO && Velocity.x > -BASICALLY_ZERO)
-        {
-            Velocity.x = 0;
+            _feetBox = GetNodeOrNull<Area2D>("FeetBox");
+            Debug.Assert(_feetBox != null);
+            _feetBox.Connect("area_exited", this, nameof(HandleFeetBoxExited));
+
+            _stateLabel = GetNodeOrNull<Label>("StateLabel");
         }
 
-        if (Velocity.y < BASICALLY_ZERO && Velocity.y > -BASICALLY_ZERO)
+        public override void _Process(float delta)
         {
-            Velocity.y = 0;
+            if (_stateLabel.Text != null)
+            {
+                _stateLabel.Text = _stateMachine.GetStateName();
+            }
         }
-    }
 
-    private void HandleMove(Vector2 velocityDelta)
-    {
-        Velocity += velocityDelta * Speed;
-    }
+        public override void _PhysicsProcess(float delta)
+        {
+            Velocity = MoveAndSlide(Velocity);
 
-    private void HandleHitBoxCollision(Area2D area) { 
-        Debug.WriteLine(area.Name);
+            if (Velocity.IsEqualApprox(Vector2.Zero))
+            {
+                Velocity = Vector2.Zero;
+            }
+        }
+
+        private void HandleHitBoxCollision(Area2D area)
+        {
+            // Debug.WriteLine("Player collided with: " + area.Name);
+        }
+
+        private void HandleFeetBoxExited(Area2D area)
+        {
+            if (area is Arena)
+            {
+                _stateMachine.TransitionTo(nameof(Falling));
+            }
+        }
     }
 }

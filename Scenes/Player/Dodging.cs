@@ -2,43 +2,49 @@ using Godot;
 using System;
 using System.Diagnostics;
 
-public class Dodging : PlayerState
+namespace Player
 {
-    public override void Enter()
+    public class Dodging : PlayerState
     {
-        var dodgeDirection = Vector2.Zero;
+        [Export]
+        private float _dodgeStrength = 750;
 
-        if (Input.IsActionPressed("ui_up"))
+        public override void Enter()
         {
-            dodgeDirection += Vector2.Up;
-        }
+            base.Enter();
 
-        if (Input.IsActionPressed("ui_down"))
-        {
-            dodgeDirection += Vector2.Down;
-        }
+            var dodgeDirection = Vector2.Zero;
 
-        if (Input.IsActionPressed("ui_left"))
-        {
-            dodgeDirection += Vector2.Left;
-        }
+            if (Input.IsActionPressed("ui_up"))
+            {
+                dodgeDirection += Vector2.Up;
+            }
 
-        if (Input.IsActionPressed("ui_right"))
-        {
-            dodgeDirection += Vector2.Right;
-        }
+            if (Input.IsActionPressed("ui_down"))
+            {
+                dodgeDirection += Vector2.Down;
+            }
 
-        dodgeDirection = dodgeDirection.Normalized();
+            if (Input.IsActionPressed("ui_left"))
+            {
+                dodgeDirection += Vector2.Left;
+            }
 
-        if (dodgeDirection == Vector2.Zero)
-        {
-            MovePlayer(Vector2.Down * 10);
-        }
-        else
-        {
-            MovePlayer(dodgeDirection * 10);
-        }
+            if (Input.IsActionPressed("ui_right"))
+            {
+                dodgeDirection += Vector2.Right;
+            }
 
-        TransitionBack();
+            dodgeDirection = dodgeDirection.Normalized();
+
+            if (dodgeDirection == Vector2.Zero)
+            {
+                dodgeDirection = Vector2.Down;
+            }
+
+            _player.Velocity += dodgeDirection * _dodgeStrength;
+
+            TransitionBack();
+        }
     }
 }

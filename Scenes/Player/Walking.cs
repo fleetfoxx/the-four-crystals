@@ -2,52 +2,51 @@ using Godot;
 using System;
 using System.Diagnostics;
 
-public class Walking : PlayerState
+namespace Player
 {
-    private Player _player;
-
-    public override void Init(Player player)
+    public class Walking : PlayerState
     {
-        _player = player;
-    }
+        [Export]
+        private float _walkSpeed = 150;
 
-    public override void Process(float delta)
-    {
-        if (Input.IsActionJustPressed("dodge"))
+        public override void Process(float delta)
         {
-            TransitionTo(nameof(Dodging));
-            return;
-        }
+            if (Input.IsActionJustPressed("dodge"))
+            {
+                TransitionTo(nameof(Dodging));
+                return;
+            }
 
-        var velocityDelta = Vector2.Zero;
+            var direction = Vector2.Zero;
 
-        if (Input.IsActionPressed("ui_up"))
-        {
-            velocityDelta += Vector2.Up;
-        }
+            if (Input.IsActionPressed("ui_up"))
+            {
+                direction += Vector2.Up;
+            }
 
-        if (Input.IsActionPressed("ui_down"))
-        {
-            velocityDelta += Vector2.Down;
-        }
+            if (Input.IsActionPressed("ui_down"))
+            {
+                direction += Vector2.Down;
+            }
 
-        if (Input.IsActionPressed("ui_left"))
-        {
-            velocityDelta += Vector2.Left;
-        }
+            if (Input.IsActionPressed("ui_left"))
+            {
+                direction += Vector2.Left;
+            }
 
-        if (Input.IsActionPressed("ui_right"))
-        {
-            velocityDelta += Vector2.Right;
-        }
+            if (Input.IsActionPressed("ui_right"))
+            {
+                direction += Vector2.Right;
+            }
 
-        velocityDelta = velocityDelta.Normalized();
-        MovePlayer(velocityDelta);
+            direction = direction.Normalized();
+            _player.Velocity = direction * _walkSpeed;
 
-        if (_player.Velocity == Vector2.Zero)
-        {
-            // Not currently walking, transition to Idle
-            TransitionTo(nameof(Idle));
+            if (_player.Velocity.IsEqualApprox(Vector2.Zero))
+            {
+                // Not currently walking, transition to Idle
+                TransitionTo(nameof(Idle));
+            }
         }
     }
 }

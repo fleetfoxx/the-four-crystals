@@ -2,22 +2,25 @@ using Godot;
 using System;
 using System.Diagnostics;
 
-public class Idle : PlayerState
+namespace Player
 {
-    public override void Process(float delta)
+    public class Idle : PlayerState
     {
-        if (
-            Input.IsActionPressed("ui_up")
-            || Input.IsActionPressed("ui_down")
-            || Input.IsActionPressed("ui_left")
-            || Input.IsActionPressed("ui_right")
-        )
+        public override void Process(float delta)
         {
-            TransitionTo(nameof(Walking));
-        }
-        else if (Input.IsActionJustPressed("dodge"))
-        {
-            TransitionTo(nameof(Dodging));
+            if (
+                Input.IsActionPressed("ui_up")
+                || Input.IsActionPressed("ui_down")
+                || Input.IsActionPressed("ui_left")
+                || Input.IsActionPressed("ui_right")
+            )
+            {
+                TransitionTo(nameof(Walking));
+            }
+            else if (Input.IsActionJustPressed("dodge"))
+            {
+                TransitionTo(nameof(Dodging));
+            }
         }
     }
 }

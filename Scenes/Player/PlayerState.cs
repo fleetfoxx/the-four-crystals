@@ -1,15 +1,17 @@
 using Godot;
 using System;
+using System.Diagnostics;
 
-public abstract class PlayerState : StateNode
+namespace Player
 {
-    [Signal]
-    public delegate void MovePlayerSignal(Vector2 velocityDelta);
-
-    protected void MovePlayer(Vector2 velocityDelta)
+    public abstract class PlayerState : StateNode
     {
-        EmitSignal(nameof(MovePlayerSignal), velocityDelta);
-    }
+        protected Player _player;
 
-    public virtual void Init(Player player) { }
+        public override void Enter()
+        {
+            _player = GetOwnerOrNull<Player>();
+            Debug.Assert(_player != null);
+        }
+    }
 }

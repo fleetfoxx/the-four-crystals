@@ -41,10 +41,12 @@ dodge={
 2d_render/layer_2="Player"
 2d_render/layer_3="Enemy"
 2d_render/layer_4="Environment"
+2d_render/layer_5="Arena"
 2d_physics/layer_1="Default"
 2d_physics/layer_2="Player"
 2d_physics/layer_3="Enemy"
 2d_physics/layer_4="Environment"
+2d_physics/layer_5="Arena"
 
 [mono]
 
