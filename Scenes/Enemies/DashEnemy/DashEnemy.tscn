@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Assets/bull.png" type="Texture" id=1]
 [ext_resource path="res://Scenes/Enemies/DashEnemy/Idle.cs" type="Script" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://Scenes/Enemies/DashEnemy/DashEnemy.cs" type="Script" id=7]
 [ext_resource path="res://Components/HeightToDepth/HeightToDepth.tscn" type="PackedScene" id=8]
 [ext_resource path="res://Scenes/Enemies/DashEnemy/ChargingUp.cs" type="Script" id=9]
+[ext_resource path="res://Scenes/Enemies/DashEnemy/Falling.cs" type="Script" id=10]
 
 [sub_resource type="DynamicFont" id=2]
 size = 8
@@ -79,6 +80,9 @@ script = ExtResource( 9 )
 
 [node name="TransitionTimer" type="Timer" parent="DashEnemyStateMachine/ChargingUp"]
 one_shot = true
+
+[node name="Falling" type="Node" parent="DashEnemyStateMachine"]
+script = ExtResource( 10 )
 
 [node name="HeightToDepth" parent="." instance=ExtResource( 8 )]
 position = Vector2( -1, 7 )
