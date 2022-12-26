@@ -8,7 +8,7 @@ namespace Enemies.HammerEnemy
     public override void OnTimeout()
     {
       base.OnTimeout();
-      TransitionTo(nameof(Idle));
+      TransitionTo(nameof(Attacking));
     }
   }
 }
