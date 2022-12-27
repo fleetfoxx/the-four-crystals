@@ -28,7 +28,6 @@ __meta__ = {
 
 [node name="HammerEnemy" parent="." instance=ExtResource( 7 )]
 position = Vector2( 311.777, 68.0314 )
-scale = Vector2( 1, 1 )
 __meta__ = {
 "_edit_group_": true
 }

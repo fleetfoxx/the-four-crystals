@@ -14,7 +14,9 @@ namespace Enemies.HammerEnemy
 
     private HammerEnemyStateMachine _stateMachine;
     private AnimationPlayer _animationPlayer;
+    private Area2D _aggroArea;
     private Label _stateLabel;
+    private Logger _logger = LoggerFactory.CreateLogger(typeof(HammerEnemy));
 
     public override void _Ready()
     {
@@ -27,6 +29,10 @@ namespace Enemies.HammerEnemy
       _animationPlayer = GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
       Debug.Assert(_animationPlayer != null);
       _animationPlayer.Connect("animation_finished", this, nameof(HandleAnimationFinished));
+
+      _aggroArea = GetExpectedNode<Area2D>("AggroArea");
+      _aggroArea.Connect("area_entered", this, nameof(HandleAggroAreaEntered));
+      _aggroArea.Connect("area_exited", this, nameof(HandleAggroAreaExited));
 
       _stateLabel = GetNodeOrNull<Label>("StateLabel");
     }
@@ -54,11 +60,20 @@ namespace Enemies.HammerEnemy
 
     private void HandleAnimationFinished(string anim_name)
     {
-      Debug.WriteLine(anim_name);
       if (anim_name == nameof(Animations.Attack))
       {
         _stateMachine.TransitionTo(nameof(Idle));
       }
+    }
+
+    private void HandleAggroAreaEntered(Area2D area)
+    {
+      _logger.Log(area.Owner.Name + " entered aggro.");
+    }
+
+    private void HandleAggroAreaExited(Area2D area)
+    {
+      _logger.Log(area.Owner.Name + " exited aggro.");
     }
   }
 }

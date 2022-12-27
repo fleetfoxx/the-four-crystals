@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Godot;
 
 namespace Enemies
@@ -14,6 +15,13 @@ namespace Enemies
       }
 
       Position += Velocity * delta;
+    }
+
+    protected T GetExpectedNode<T>(NodePath path) where T : Node
+    {
+      var node = GetNodeOrNull<T>(path);
+      Debug.Assert(node != null);
+      return node;
     }
   }
 }
