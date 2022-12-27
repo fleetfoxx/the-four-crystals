@@ -8,7 +8,7 @@ namespace Enemies
   {
     protected IEnemy _owner;
 
-    public override void Enter()
+    public override void Enter(params object[] args)
     {
       _owner = GetOwnerOrNull<IEnemy>();
       Debug.Assert(_owner != null);

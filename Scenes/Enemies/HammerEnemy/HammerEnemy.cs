@@ -1,15 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Godot;
 
 namespace Enemies.HammerEnemy
 {
   public class HammerEnemy : EnemyArea2D
   {
+    // These should match the animation names in the AnimationPlayer.
     private enum Animations
     {
       Idle,
+      Chase,
       Attack
     }
 
@@ -19,8 +22,9 @@ namespace Enemies.HammerEnemy
     private Node2D _hammerTarget;
     private Label _stateLabel;
 
-    private List<Node2D> _attackTargets = new List<Node2D>();
     private Logger _logger = LoggerFactory.CreateLogger(typeof(HammerEnemy));
+    private List<Node2D> _attackTargets = new List<Node2D>();
+
 
     public override void _Ready()
     {
@@ -58,6 +62,11 @@ namespace Enemies.HammerEnemy
         _animationPlayer.Play(nameof(Animations.Idle));
       }
 
+      if (next is Chasing)
+      {
+        _animationPlayer.Play(nameof(Animations.Chase));
+      }
+
       if (next is Attacking)
       {
         _animationPlayer.Play(nameof(Animations.Attack));
@@ -68,7 +77,14 @@ namespace Enemies.HammerEnemy
     {
       if (anim_name == nameof(Animations.Attack))
       {
-        _stateMachine.TransitionTo(nameof(Idle));
+        if (_attackTargets.Any())
+        {
+          _stateMachine.TransitionTo(nameof(Chasing), _attackTargets[0], _hammerTarget);
+        }
+        else
+        {
+          _stateMachine.TransitionTo(nameof(Idle));
+        }
       }
     }
 
@@ -86,9 +102,12 @@ namespace Enemies.HammerEnemy
     {
       if (node is Player.Player)
       {
-        _logger.Log(node.Name + " entered aggro.");
         _attackTargets.Add((Player.Player)node);
-        _stateMachine.TransitionTo(nameof(Attacking));
+
+        if (_stateMachine.GetState() is Idle || _stateMachine.GetState() is Wandering)
+        {
+          _stateMachine.TransitionTo(nameof(Chasing), _attackTargets[0], _hammerTarget);
+        }
       }
     }
 
@@ -96,7 +115,6 @@ namespace Enemies.HammerEnemy
     {
       if (node is Player.Player)
       {
-        _logger.Log(node.Name + " exited aggro.");
         _attackTargets.Remove((Player.Player)node);
       }
     }

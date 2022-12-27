@@ -4,13 +4,13 @@ using System.Diagnostics;
 
 namespace Player
 {
-    public class Falling : PlayerState
+  public class Falling : PlayerState
+  {
+    public override void Enter(params object[] args)
     {
-        public override void Enter()
-        {
-            base.Enter();
-            Debug.WriteLine("Falling");
-            _player.Velocity = Vector2.Zero;
-        }
+      base.Enter(args);
+      Debug.WriteLine("Falling");
+      _player.Velocity = Vector2.Zero;
     }
+  }
 }

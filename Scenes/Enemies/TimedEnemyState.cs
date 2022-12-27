@@ -20,9 +20,9 @@ namespace Enemies
       AddChild(_timer);
     }
 
-    public override void Enter()
+    public override void Enter(params object[] args)
     {
-      base.Enter();
+      base.Enter(args);
       _timer.Start();
     }
 

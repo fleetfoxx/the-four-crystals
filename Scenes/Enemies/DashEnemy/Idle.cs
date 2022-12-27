@@ -19,9 +19,9 @@ namespace Enemies.DashEnemy
       _timer.Connect("timeout", this, nameof(OnTimeout));
     }
 
-    public override void Enter()
+    public override void Enter(params object[] args)
     {
-      base.Enter();
+      base.Enter(args);
       _timer.Start(_idleDuration);
       _owner.Velocity = Vector2.Zero;
     }

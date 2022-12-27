@@ -82,7 +82,7 @@ public class StateMachine<TState> : Node where TState : StateNode
 
   protected virtual void EnterState(TState nextState, params object[] args)
   {
-    Debug.WriteLine($"[{Owner.Name}] Entering state: {nextState.Name}");
+    // Debug.WriteLine($"[{Owner.Name}] Entering state: {nextState.Name}");
 
     EmitSignal(nameof(OnStateTransition), _currentState, nextState);
 
