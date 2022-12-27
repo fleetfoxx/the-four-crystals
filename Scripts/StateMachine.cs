@@ -22,12 +22,11 @@ public class StateMachine<TState> : Node where TState : StateNode
     return _currentState.Name;
   }
 
-  public void TransitionTo(NodePath nextState)
+  public void TransitionTo(NodePath nextState, params object[] args)
   {
-    var nextStateNode = GetNodeOrNull<TState>(nextState);
-    Debug.Assert(nextStateNode != null);
+    var nextStateNode = this.GetExpectedNode<TState>(nextState);
     ExitState();
-    EnterState(nextStateNode);
+    EnterState(nextStateNode, args);
   }
 
   public void TransitionBack()
@@ -81,7 +80,7 @@ public class StateMachine<TState> : Node where TState : StateNode
     _currentState.UnhandledKeyInput(e);
   }
 
-  protected virtual void EnterState(TState nextState)
+  protected virtual void EnterState(TState nextState, params object[] args)
   {
     Debug.WriteLine($"[{Owner.Name}] Entering state: {nextState.Name}");
 
@@ -98,7 +97,7 @@ public class StateMachine<TState> : Node where TState : StateNode
         this,
         nameof(HandleTransitionBack)
     );
-    _currentState.Enter();
+    _currentState.Enter(args);
   }
 
   protected virtual void ExitState()
