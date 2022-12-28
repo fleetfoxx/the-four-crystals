@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scenes/UI/HUD/HUD.cs" type="Script" id=1]
+[ext_resource path="res://Scenes/UI/HUD/HealthPip.tscn" type="PackedScene" id=2]
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource( 1 )
+_healthPipScene = ExtResource( 2 )
+
+[node name="HealthContainer" type="VBoxContainer" parent="."]
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 8.0
+
+[node name="HealthPip" parent="HealthContainer" instance=ExtResource( 2 )]
