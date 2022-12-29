@@ -17,6 +17,15 @@ public class Root : Node2D
     _hud = this.GetExpectedNode<HUD>("HUD");
   }
 
+  public override void _Process(float delta)
+  {
+    base._Process(delta);
+    if (Input.IsActionJustPressed("quit"))
+    {
+      GetTree().Quit();
+    }
+  }
+
   private void HandlePlayerHealthChanged(int health)
   {
     Debug.WriteLine("Player health changed to " + health);
