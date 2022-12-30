@@ -4,6 +4,12 @@ namespace Enemies
 {
   public class Enemy : KinematicBody2D, IEnemy
   {
+    [Export]
+    public float MaxHealth = 100;
+
+    [Export]
+    public float Health = 75;
+
     public Vector2 Velocity { get; set; }
 
     public override void _PhysicsProcess(float delta)

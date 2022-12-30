@@ -12,7 +12,7 @@ namespace Enemies.HammerEnemy
       _owner.Velocity = Vector2.Zero;
     }
 
-    public override void OnTimeout()
+    protected override void OnTimeout()
     {
       base.OnTimeout();
       TransitionTo(nameof(Wandering));

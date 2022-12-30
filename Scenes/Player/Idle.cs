@@ -14,12 +14,10 @@ namespace Player
 
     public override void Process(float delta)
     {
-      if (
-          Input.IsActionPressed("ui_up")
-          || Input.IsActionPressed("ui_down")
-          || Input.IsActionPressed("ui_left")
-          || Input.IsActionPressed("ui_right")
-      )
+      var velocity = Input.GetVector("move_left", "move_right", "move_up", "move_down");
+
+
+      if (!velocity.IsEqualApprox(Vector2.Zero))
       {
         TransitionTo(nameof(Walking));
       }

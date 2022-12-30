@@ -13,7 +13,5 @@ namespace Enemies
       _owner = GetOwnerOrNull<IEnemy>();
       Debug.Assert(_owner != null);
     }
-
-    public virtual void Init(Node2D target) { }
   }
 }

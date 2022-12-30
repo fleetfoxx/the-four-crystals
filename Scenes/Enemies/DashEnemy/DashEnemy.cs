@@ -7,23 +7,32 @@ namespace Enemies.DashEnemy
 {
   public class DashEnemy : Enemy
   {
+    [Export]
+    public float WalkSpeed = 25f;
+
+    [Export]
+    public float ChargeSpeed = 55f;
+
+    private Sprite _sprite;
     private DashEnemyStateMachine _stateMachine;
-    private Label _stateLabel;
+    private HealthBar _healthBar;
     private Area2D _aggro;
     private Area2D _feetBox;
+    private Label _stateLabel;
 
     public override void _Ready()
     {
-      _stateMachine = GetNodeOrNull<DashEnemyStateMachine>("DashEnemyStateMachine");
-      Debug.Assert(_stateMachine != null);
+      _sprite = this.GetExpectedNode<Sprite>("Sprite");
 
-      _aggro = GetNodeOrNull<Area2D>("Aggro");
-      Debug.Assert(_aggro != null);
-      _aggro.Connect("area_entered", this, nameof(HandleAggroEntered));
-      _aggro.Connect("area_exited", this, nameof(HandleAggroExited));
+      _stateMachine = this.GetExpectedNode<DashEnemyStateMachine>("DashEnemyStateMachine");
 
-      _feetBox = GetNodeOrNull<Area2D>("FeetBox");
-      Debug.Assert(_feetBox != null);
+      _healthBar = this.GetExpectedNode<HealthBar>("HealthBar");
+
+      _aggro = this.GetExpectedNode<Area2D>("Aggro");
+      _aggro.Connect("body_entered", this, nameof(HandleAggroBodyEntered));
+      _aggro.Connect("body_exited", this, nameof(HandleAggroBodyExited));
+
+      _feetBox = this.GetExpectedNode<Area2D>("FeetBox");
       _feetBox.Connect("area_exited", this, nameof(HandleFeetBoxExited));
 
       _stateLabel = GetNodeOrNull<Label>("StateLabel");
@@ -35,20 +44,34 @@ namespace Enemies.DashEnemy
       {
         _stateLabel.Text = _stateMachine.GetStateName();
       }
+
+      if (Velocity.x < 0)
+      {
+        _sprite.FlipH = true;
+      }
+      else if (Velocity.x > 0)
+      {
+        _sprite.FlipH = false;
+      }
+
+      _healthBar.MaxHealth = MaxHealth;
+      _healthBar.Health = Health;
     }
 
-    private void HandleAggroEntered(Area2D area)
+    private void HandleAggroBodyEntered(Node node)
     {
-      // Debug.WriteLine(area.Name + " entered");
-      _stateMachine.SetTarget(area);
-      _stateMachine.TransitionTo(nameof(ChargingUp));
+      if (node is Player.Player)
+      {
+        _stateMachine.TransitionTo(nameof(ChargingUp), node);
+      }
     }
 
-    private void HandleAggroExited(Area2D area)
+    private void HandleAggroBodyExited(Node node)
     {
-      // Debug.WriteLine(area.Name + " exited");
-      _stateMachine.SetTarget(null);
-      _stateMachine.TransitionTo(nameof(Idle));
+      if (node is Player.Player)
+      {
+        _stateMachine.TransitionTo(nameof(Idle));
+      }
     }
 
     private void HandleFeetBoxExited(Area2D area)

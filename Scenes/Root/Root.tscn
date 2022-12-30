@@ -33,6 +33,18 @@ __meta__ = {
 "_edit_group_": true
 }
 
+[node name="DashEnemy2" parent="." instance=ExtResource( 4 )]
+position = Vector2( 51, 82 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="DashEnemy3" parent="." instance=ExtResource( 4 )]
+position = Vector2( 70, 38 )
+__meta__ = {
+"_edit_group_": true
+}
+
 [node name="Box2" parent="." instance=ExtResource( 5 )]
 position = Vector2( 177, 48 )
 

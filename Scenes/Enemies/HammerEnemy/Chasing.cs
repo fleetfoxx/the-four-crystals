@@ -21,14 +21,14 @@ namespace Enemies.HammerEnemy
       _attackTarget = null;
       _hammerTarget = null;
     }
-    
+
     public override void Process(float delta)
     {
       base.Process(delta);
       _owner.Velocity = _hammerTarget.GlobalPosition.DirectionTo(_attackTarget.GlobalPosition).Normalized();
     }
 
-    public override void OnTimeout()
+    protected override void OnTimeout()
     {
       base.OnTimeout();
       TransitionTo(nameof(Attacking));

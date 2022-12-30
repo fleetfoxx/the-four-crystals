@@ -23,8 +23,9 @@ namespace Player
     private PlayerStateMachine _stateMachine;
     private Area2D _hitBox;
     private Area2D _feetBox;
+    private AnimatedSprite _fireAnimation;
     private Label _stateLabel;
-    private bool _isInLava = false;
+    private bool _isOnFire = false;
 
     public Vector2 Velocity = Vector2.Zero;
 
@@ -40,6 +41,8 @@ namespace Player
       _feetBox = this.GetExpectedNode<Area2D>("FeetBox");
       _feetBox.Connect("area_entered", this, nameof(HandleFeetBoxEntered));
       _feetBox.Connect("area_exited", this, nameof(HandleFeetBoxExited));
+
+      _fireAnimation = this.GetExpectedNode<AnimatedSprite>("FireAnimation");
 
       _stateLabel = GetNodeOrNull<Label>("StateLabel");
 
@@ -72,21 +75,8 @@ namespace Player
         _playerSprite.FlipH = false;
       }
 
-      var overlappingAreas = _feetBox.GetOverlappingAreas();
-      _isInLava = false;
-
-      foreach (var area in overlappingAreas)
-      {
-        if (area is LavaArea)
-        {
-          _isInLava = true;
-        }
-      }
-
-      if (_isInLava)
-      {
-        // TODO: do something
-      }
+      CheckForStatusEffects();
+      ApplyStatusEffects();
     }
 
     public override void _PhysicsProcess(float delta)
@@ -117,6 +107,33 @@ namespace Player
       if (area is Arena)
       {
         _stateMachine.TransitionTo(nameof(Falling));
+      }
+    }
+
+    private void CheckForStatusEffects()
+    {
+      var overlappingAreas = _feetBox.GetOverlappingAreas();
+      
+      _isOnFire = false;
+
+      foreach (var area in overlappingAreas)
+      {
+        if (area is LavaArea)
+        {
+          _isOnFire = true;
+        }
+      }
+    }
+
+    private void ApplyStatusEffects()
+    {
+      if (_isOnFire)
+      {
+        _fireAnimation.Visible = true;
+      }
+      else
+      {
+        _fireAnimation.Visible = false;
       }
     }
   }

@@ -13,29 +13,7 @@ namespace Player
     {
       base.Enter(args);
 
-      var dodgeDirection = Vector2.Zero;
-
-      if (Input.IsActionPressed("ui_up"))
-      {
-        dodgeDirection += Vector2.Up;
-      }
-
-      if (Input.IsActionPressed("ui_down"))
-      {
-        dodgeDirection += Vector2.Down;
-      }
-
-      if (Input.IsActionPressed("ui_left"))
-      {
-        dodgeDirection += Vector2.Left;
-      }
-
-      if (Input.IsActionPressed("ui_right"))
-      {
-        dodgeDirection += Vector2.Right;
-      }
-
-      dodgeDirection = dodgeDirection.Normalized();
+      var dodgeDirection = Input.GetVector("move_left", "move_right", "move_up", "move_down");
 
       if (dodgeDirection == Vector2.Zero)
       {

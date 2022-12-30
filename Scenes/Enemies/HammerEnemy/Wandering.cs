@@ -5,7 +5,7 @@ namespace Enemies.HammerEnemy
 {
   public class Wandering : TimedEnemyState
   {
-    public override void OnTimeout()
+    protected override void OnTimeout()
     {
       base.OnTimeout();
       TransitionTo(nameof(Idle));

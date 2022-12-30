@@ -3,38 +3,21 @@ using Godot;
 
 namespace Enemies.DashEnemy
 {
-  public class ChargingUp : EnemyState
+  public class ChargingUp : TimedEnemyState
   {
-    [Export]
-    private float _duration = 5;
-
-    private Timer _timer;
-
-    public override void _Ready()
-    {
-      base._Ready();
-
-      _timer = GetNodeOrNull<Timer>("TransitionTimer");
-      Debug.Assert(_timer != null);
-      _timer.Connect("timeout", this, nameof(OnTimeout));
-    }
+    private Node2D _target;
 
     public override void Enter(params object[] args)
     {
       base.Enter(args);
-      _timer.Start(_duration);
+      _target = (Node2D)args[0];
       _owner.Velocity = Vector2.Zero;
     }
 
-    public override void Exit()
+    protected override void OnTimeout()
     {
-      base.Exit();
-      _timer.Stop();
-    }
-
-    private void OnTimeout()
-    {
-      TransitionTo(nameof(Attacking));
+      Debug.WriteLine(_target.Name);
+      TransitionTo(nameof(Attacking), _target);
     }
   }
 }

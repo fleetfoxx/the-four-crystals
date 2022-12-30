@@ -14,29 +14,7 @@ namespace Player
         return;
       }
 
-      var direction = Vector2.Zero;
-
-      if (Input.IsActionPressed("ui_up"))
-      {
-        direction += Vector2.Up;
-      }
-
-      if (Input.IsActionPressed("ui_down"))
-      {
-        direction += Vector2.Down;
-      }
-
-      if (Input.IsActionPressed("ui_left"))
-      {
-        direction += Vector2.Left;
-      }
-
-      if (Input.IsActionPressed("ui_right"))
-      {
-        direction += Vector2.Right;
-      }
-
-      direction = direction.Normalized();
+      var direction = Input.GetVector("move_left", "move_right", "move_up", "move_down");
       _player.Velocity = direction * _player.WalkSpeed;
 
       if (_player.Velocity.IsEqualApprox(Vector2.Zero))

@@ -82,8 +82,6 @@ public class StateMachine<TState> : Node where TState : StateNode
 
   protected virtual void EnterState(TState nextState, params object[] args)
   {
-    // Debug.WriteLine($"[{Owner.Name}] Entering state: {nextState.Name}");
-
     EmitSignal(nameof(OnStateTransition), _currentState, nextState);
 
     _currentState = nextState;
@@ -124,9 +122,9 @@ public class StateMachine<TState> : Node where TState : StateNode
     _currentState.Exit();
   }
 
-  private void HandleTransitionTo(NodePath nextState)
+  private void HandleTransitionTo(NodePath nextState, object[] args)
   {
-    TransitionTo(nextState);
+    TransitionTo(nextState, args);
   }
 
   private void HandleTransitionBack()
