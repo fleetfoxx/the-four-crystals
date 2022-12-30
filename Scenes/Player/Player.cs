@@ -9,9 +9,29 @@ namespace Player
     [Signal]
     public delegate void HealthChangedSignal(int health);
 
+    [Signal]
+    public delegate void DeathSignal();
+
     [Export]
     private int _maxHealth = 5;
     private int _health = 0;
+    public int Health
+    {
+      get { return _health; }
+      set
+      {
+        _health = value;
+
+        if (_health <= 0)
+        {
+          EmitSignal(nameof(DeathSignal));
+        }
+        else
+        {
+          EmitSignal(nameof(HealthChangedSignal), _health);
+        }
+      }
+    }
 
     [Export]
     public float WalkSpeed = 150f;
@@ -19,13 +39,21 @@ namespace Player
     [Export]
     public float DashSpeed = 300f;
 
+    [Export]
+    public float KnockbackSpeed = 300f;
+
+
+    #region Status effects
+    [Export]
+    private PackedScene _burningScene;
+    public bool IsBurning { get => GetNodeOrNull<Burning>("Burning") != null; }
+    #endregion
+
     private Sprite _playerSprite;
     private PlayerStateMachine _stateMachine;
     private Area2D _hitBox;
     private Area2D _feetBox;
-    private AnimatedSprite _fireAnimation;
     private Label _stateLabel;
-    private bool _isOnFire = false;
 
     public Vector2 Velocity = Vector2.Zero;
 
@@ -42,21 +70,19 @@ namespace Player
       _feetBox.Connect("area_entered", this, nameof(HandleFeetBoxEntered));
       _feetBox.Connect("area_exited", this, nameof(HandleFeetBoxExited));
 
-      _fireAnimation = this.GetExpectedNode<AnimatedSprite>("FireAnimation");
-
       _stateLabel = GetNodeOrNull<Label>("StateLabel");
 
-      _health = _maxHealth;
+      Health = _maxHealth;
 
       // HACK: _Ready() is called before the Root node has set up the signal
       // connection so the first signal is missed. Use a timer to delay the
       // initial broadcast.
-      GetTree().CreateTimer(1).Connect("timeout", this, nameof(InitialBroadcast));
+      GetTree().CreateTimer(0.1f).Connect("timeout", this, nameof(InitialBroadcast));
     }
 
     private void InitialBroadcast()
     {
-      EmitSignal(nameof(HealthChangedSignal), _health);
+      EmitSignal(nameof(HealthChangedSignal), Health);
     }
 
     public override void _Process(float delta)
@@ -76,7 +102,6 @@ namespace Player
       }
 
       CheckForStatusEffects();
-      ApplyStatusEffects();
     }
 
     public override void _PhysicsProcess(float delta)
@@ -86,6 +111,19 @@ namespace Player
       if (Velocity.IsEqualApprox(Vector2.Zero))
       {
         Velocity = Vector2.Zero;
+      }
+    }
+
+    public void ApplyDamage(int damage)
+    {
+      Health -= damage;
+    }
+
+    public void ApplyKnockback(Vector2 direction, float power)
+    {
+      if (!(_stateMachine.GetState() is KnockedBack))
+      {
+        _stateMachine.TransitionTo(nameof(KnockedBack), direction, power);
       }
     }
 
@@ -113,28 +151,29 @@ namespace Player
     private void CheckForStatusEffects()
     {
       var overlappingAreas = _feetBox.GetOverlappingAreas();
-      
-      _isOnFire = false;
 
       foreach (var area in overlappingAreas)
       {
-        if (area is LavaArea)
+        if (area is LavaArea && !IsBurning)
         {
-          _isOnFire = true;
+          var burning = _burningScene.Instance<Burning>();
+          burning.Connect(nameof(Burning.DamageSignal), this, nameof(HandleBurnDamage));
+          AddChild(burning);
+        }
+
+        if (area is WaterTile)
+        {
+          if (IsBurning)
+          {
+            GetNode<Burning>("Burning").QueueFree();
+          }
         }
       }
     }
 
-    private void ApplyStatusEffects()
+    private void HandleBurnDamage(int damage)
     {
-      if (_isOnFire)
-      {
-        _fireAnimation.Visible = true;
-      }
-      else
-      {
-        _fireAnimation.Visible = false;
-      }
+      ApplyDamage(damage);
     }
   }
 }

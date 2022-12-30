@@ -9,4 +9,18 @@ public static class NodeExtensions
     Debug.Assert(child != null);
     return child;
   }
+
+  public static T GetExpectedOwner<T>(this Node node) where T : Node
+  {
+    var owner = node.GetOwnerOrNull<T>();
+    Debug.Assert(owner != null);
+    return owner;
+  }
+
+  public static T GetExpectedParent<T>(this Node node) where T : Node
+  {
+    var parent = node.GetParentOrNull<T>();
+    Debug.Assert(parent != null);
+    return parent;
+  }
 }

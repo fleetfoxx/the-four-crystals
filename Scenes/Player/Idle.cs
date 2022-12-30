@@ -16,7 +16,6 @@ namespace Player
     {
       var velocity = Input.GetVector("move_left", "move_right", "move_up", "move_down");
 
-
       if (!velocity.IsEqualApprox(Vector2.Zero))
       {
         TransitionTo(nameof(Walking));

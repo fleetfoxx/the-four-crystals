@@ -34,13 +34,7 @@ public class StateMachine<TState> : Node where TState : StateNode
     if (_history.Count > 0)
     {
       var previousState = GetNodeOrNull<TState>(_history.Pop());
-
       Debug.Assert(previousState != null);
-
-      if (DEBUG)
-      {
-        Debug.WriteLine("Transitioning back to: " + previousState.Name);
-      }
 
       ExitState();
       EnterState(previousState);
@@ -100,11 +94,6 @@ public class StateMachine<TState> : Node where TState : StateNode
 
   protected virtual void ExitState()
   {
-    if (DEBUG)
-    {
-      Debug.WriteLine("Exiting state: " + _currentState.Name);
-    }
-
     _history.Push(_currentState.Name);
 
     _currentState.Disconnect(

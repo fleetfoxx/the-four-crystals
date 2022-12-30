@@ -13,10 +13,14 @@ namespace Enemies.DashEnemy
     [Export]
     public float ChargeSpeed = 55f;
 
+    [Export]
+    public int _damage = 1;
+
     private Sprite _sprite;
     private DashEnemyStateMachine _stateMachine;
     private HealthBar _healthBar;
     private Area2D _aggro;
+    private Area2D _hitBox;
     private Area2D _feetBox;
     private Label _stateLabel;
 
@@ -31,6 +35,9 @@ namespace Enemies.DashEnemy
       _aggro = this.GetExpectedNode<Area2D>("Aggro");
       _aggro.Connect("body_entered", this, nameof(HandleAggroBodyEntered));
       _aggro.Connect("body_exited", this, nameof(HandleAggroBodyExited));
+
+      _hitBox = this.GetExpectedNode<Area2D>("HitBox");
+      _hitBox.Connect("area_entered", this, nameof(HandleAreaEnteredHitBox));
 
       _feetBox = this.GetExpectedNode<Area2D>("FeetBox");
       _feetBox.Connect("area_exited", this, nameof(HandleFeetBoxExited));
@@ -71,6 +78,21 @@ namespace Enemies.DashEnemy
       if (node is Player.Player)
       {
         _stateMachine.TransitionTo(nameof(Idle));
+      }
+    }
+
+    private void HandleAreaEnteredHitBox(Area2D area)
+    {
+      if (area.Owner is Player.Player)
+      {
+        if (_stateMachine.GetState() is Attacking)
+        {
+          var player = (Player.Player)area.Owner;
+          var direction = Velocity.Normalized();
+          player.ApplyKnockback(direction, ChargeSpeed);
+          player.ApplyDamage(_damage);
+          _stateMachine.TransitionTo(nameof(ChargingUp), area.Owner);
+        }
       }
     }
 

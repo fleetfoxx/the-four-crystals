@@ -31,7 +31,7 @@ namespace Player
       _timer.Stop();
     }
 
-    public virtual void OnTimeout()
+    protected virtual void OnTimeout()
     {
       // Debug.WriteLine($"[{GetType().Name}] {nameof(OnTimeout)} fired.");
     }

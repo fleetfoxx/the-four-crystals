@@ -23,7 +23,7 @@ namespace Player
       _player.Velocity = _direction * _player.DashSpeed;
     }
 
-    public override void OnTimeout()
+    protected override void OnTimeout()
     {
       base.OnTimeout();
       TransitionBack();
@@ -31,29 +31,7 @@ namespace Player
 
     private Vector2 GetInputDirection()
     {
-      var direction = Vector2.Zero;
-
-      if (Input.IsActionPressed("ui_up"))
-      {
-        direction += Vector2.Up;
-      }
-
-      if (Input.IsActionPressed("ui_down"))
-      {
-        direction += Vector2.Down;
-      }
-
-      if (Input.IsActionPressed("ui_left"))
-      {
-        direction += Vector2.Left;
-      }
-
-      if (Input.IsActionPressed("ui_right"))
-      {
-        direction += Vector2.Right;
-      }
-
-      direction = direction.Normalized();
+      var direction = Input.GetVector("move_left", "move_right", "move_up", "move_down");
 
       if (direction == Vector2.Zero)
       {

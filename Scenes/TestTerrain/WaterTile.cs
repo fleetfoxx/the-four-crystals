@@ -1,8 +1,7 @@
 using Godot;
 using System;
-using System.Diagnostics;
 
-public class LavaArea : Area2D
+public class WaterTile : Area2D
 {
   private Sprite _debugSprite;
 
