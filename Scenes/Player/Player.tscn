@@ -17,8 +17,8 @@ size = 8
 font_data = ExtResource( 7 )
 
 [sub_resource type="CapsuleShape2D" id=3]
-radius = 8.0
-height = 36.0
+radius = 7.0
+height = 26.0
 
 [sub_resource type="CapsuleShape2D" id=4]
 radius = 4.00002
@@ -32,13 +32,14 @@ height = 7.99999
 collision_layer = 2
 collision_mask = 12
 script = ExtResource( 5 )
+DashSpeed = 350.0
 _burningScene = ExtResource( 12 )
 
 [node name="StateLabel" type="Label" parent="."]
 margin_left = -22.0
-margin_top = -35.0
+margin_top = -29.0
 margin_right = 66.0
-margin_bottom = -26.0
+margin_bottom = -20.0
 rect_scale = Vector2( 0.5, 0.5 )
 custom_fonts/font = SubResource( 2 )
 text = "<state>"
@@ -62,14 +63,14 @@ script = ExtResource( 9 )
 
 [node name="Dashing" type="Node" parent="PlayerStateMachine"]
 script = ExtResource( 10 )
-_duration = 0.2
+_duration = 0.3
 
 [node name="KnockedBack" type="Node" parent="PlayerStateMachine"]
 script = ExtResource( 11 )
 _duration = 0.2
 
 [node name="HeightToDepth" parent="." instance=ExtResource( 8 )]
-position = Vector2( 0, 23 )
+position = Vector2( 0, 18 )
 
 [node name="HitBox" type="Area2D" parent="."]
 collision_layer = 2
@@ -84,11 +85,11 @@ collision_layer = 2
 collision_mask = 16
 
 [node name="FeetBoxCollider" type="CollisionShape2D" parent="FeetBox"]
-position = Vector2( 0, 23 )
+position = Vector2( 0, 18 )
 rotation = 1.57079
 shape = SubResource( 4 )
 
 [node name="PhysicsCollider" type="CollisionShape2D" parent="."]
-position = Vector2( 0, 23 )
+position = Vector2( 0, 18 )
 rotation = 1.57079
 shape = SubResource( 14 )

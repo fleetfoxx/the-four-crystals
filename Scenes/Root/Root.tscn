@@ -30,7 +30,7 @@ __meta__ = {
 }
 
 [node name="DashEnemy2" parent="." instance=ExtResource( 4 )]
-position = Vector2( 51, 82 )
+position = Vector2( -136, 384 )
 __meta__ = {
 "_edit_group_": true
 }
@@ -41,18 +41,173 @@ __meta__ = {
 "_edit_group_": true
 }
 
-[node name="Box2" parent="." instance=ExtResource( 5 )]
-position = Vector2( 177, 48 )
-
-[node name="Box3" parent="." instance=ExtResource( 5 )]
-position = Vector2( 180, 222 )
-
-[node name="Box4" parent="." instance=ExtResource( 5 )]
-position = Vector2( 354, 137 )
-
 [node name="HUD" parent="." instance=ExtResource( 8 )]
 
 [node name="TestTerrain" parent="." instance=ExtResource( 9 )]
 
 [node name="PlayerSpawn" type="Node2D" parent="."]
-position = Vector2( 411, -1 )
+position = Vector2( 120, 304 )
+
+[node name="Boxes" type="Node2D" parent="."]
+
+[node name="Box2" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( 177, 48 )
+
+[node name="Box24" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -264, 304 )
+
+[node name="Box25" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -248, 288 )
+
+[node name="Box26" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -232, 288 )
+
+[node name="Box27" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -216, 288 )
+
+[node name="Box28" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -200, 272 )
+
+[node name="Box29" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -184, 272 )
+
+[node name="Box30" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -168, 272 )
+
+[node name="Box31" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -224, 384 )
+
+[node name="Box32" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -40, 360 )
+
+[node name="Box33" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -88, 440 )
+
+[node name="Box34" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -152, 328 )
+
+[node name="Box35" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -88, 272 )
+
+[node name="Box36" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -72, 272 )
+
+[node name="Box37" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -56, 272 )
+
+[node name="Box38" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -40, 288 )
+
+[node name="Box39" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -24, 288 )
+
+[node name="Box40" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -8, 304 )
+
+[node name="Box3" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -280, 320 )
+
+[node name="Box5" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -280, 336 )
+
+[node name="Box6" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -280, 352 )
+
+[node name="Box7" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -280, 368 )
+
+[node name="Box8" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -280, 384 )
+
+[node name="Box9" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -280, 400 )
+
+[node name="Box10" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -280, 416 )
+
+[node name="Box11" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -280, 432 )
+
+[node name="Box13" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -280, 448 )
+
+[node name="Box42" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -264, 464 )
+
+[node name="Box43" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -248, 480 )
+
+[node name="Box44" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -232, 480 )
+
+[node name="Box45" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -216, 496 )
+
+[node name="Box46" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -200, 496 )
+
+[node name="Box47" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -184, 496 )
+
+[node name="Box48" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -168, 496 )
+
+[node name="Box49" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -152, 496 )
+
+[node name="Box50" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -136, 496 )
+
+[node name="Box51" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -120, 496 )
+
+[node name="Box52" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -104, 496 )
+
+[node name="Box53" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -88, 496 )
+
+[node name="Box54" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -72, 496 )
+
+[node name="Box55" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -56, 496 )
+
+[node name="Box56" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -40, 480 )
+
+[node name="Box57" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -24, 480 )
+
+[node name="Box58" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( -8, 464 )
+
+[node name="Box15" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( 8, 320 )
+
+[node name="Box16" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( 8, 336 )
+
+[node name="Box17" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( 8, 352 )
+
+[node name="Box18" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( 8, 368 )
+
+[node name="Box19" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( 8, 384 )
+
+[node name="Box20" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( 8, 400 )
+
+[node name="Box21" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( 8, 416 )
+
+[node name="Box22" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( 8, 432 )
+
+[node name="Box23" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( 8, 448 )
+
+[node name="Box4" parent="Boxes" instance=ExtResource( 5 )]
+position = Vector2( 354, 137 )

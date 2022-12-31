@@ -24,7 +24,7 @@ namespace Enemies.DashEnemy
 
     protected override void OnTimeout()
     {
-      TransitionTo(nameof(ChargingUp), _target);
+      TransitionTo(nameof(Idle));
     }
   }
 }

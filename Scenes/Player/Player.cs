@@ -49,6 +49,8 @@ namespace Player
     public bool IsBurning { get => GetNodeOrNull<Burning>("Burning") != null; }
     #endregion
 
+    public bool IsDashing { get => _stateMachine.GetState() is Dashing; }
+
     private Sprite _playerSprite;
     private PlayerStateMachine _stateMachine;
     private Area2D _hitBox;
@@ -136,7 +138,7 @@ namespace Player
     {
       if (area is LavaArea)
       {
-        Debug.WriteLine("Player in lava.");
+        // Debug.WriteLine("Player in lava.");
       }
     }
 
@@ -154,7 +156,7 @@ namespace Player
 
       foreach (var area in overlappingAreas)
       {
-        if (area is LavaArea && !IsBurning)
+        if (area is LavaArea && !IsBurning && !IsDashing)
         {
           var burning = _burningScene.Instance<Burning>();
           burning.Connect(nameof(Burning.DamageSignal), this, nameof(HandleBurnDamage));

@@ -1,7 +1,9 @@
 using Enemies.DashEnemy;
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Enemies.DashEnemy
 {
@@ -16,6 +18,15 @@ namespace Enemies.DashEnemy
     [Export]
     public int _damage = 1;
 
+    public bool IsDocile
+    {
+      get
+      {
+        var state = _stateMachine.GetState();
+        return state is Idle || state is Wandering;
+      }
+    }
+
     private Sprite _sprite;
     private DashEnemyStateMachine _stateMachine;
     private HealthBar _healthBar;
@@ -23,6 +34,8 @@ namespace Enemies.DashEnemy
     private Area2D _hitBox;
     private Area2D _feetBox;
     private Label _stateLabel;
+    private List<Node2D> _attackTargets = new List<Node2D>();
+
 
     public override void _Ready()
     {
@@ -63,13 +76,18 @@ namespace Enemies.DashEnemy
 
       _healthBar.MaxHealth = MaxHealth;
       _healthBar.Health = Health;
+
+      if (IsDocile && _attackTargets.Any())
+      {
+        _stateMachine.TransitionTo(nameof(ChargingUp), _attackTargets[0]);
+      }
     }
 
     private void HandleAggroBodyEntered(Node node)
     {
       if (node is Player.Player)
       {
-        _stateMachine.TransitionTo(nameof(ChargingUp), node);
+        _attackTargets.Add((Player.Player)node);
       }
     }
 
@@ -77,7 +95,7 @@ namespace Enemies.DashEnemy
     {
       if (node is Player.Player)
       {
-        _stateMachine.TransitionTo(nameof(Idle));
+        _attackTargets.Remove((Player.Player)node);
       }
     }
 

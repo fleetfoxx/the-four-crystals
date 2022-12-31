@@ -31,6 +31,8 @@ radius = 1.00002
 height = 12.0
 
 [node name="DashEnemy" type="KinematicBody2D"]
+z_index = 7
+z_as_relative = false
 collision_layer = 4
 collision_mask = 10
 script = ExtResource( 7 )
@@ -68,6 +70,7 @@ _duration = 5.0
 
 [node name="Attacking" type="Node" parent="DashEnemyStateMachine"]
 script = ExtResource( 4 )
+_duration = 0.25
 
 [node name="ChargingUp" type="Node" parent="DashEnemyStateMachine"]
 script = ExtResource( 9 )
@@ -105,6 +108,7 @@ rotation = 1.57079
 shape = SubResource( 5 )
 
 [node name="HealthBar" parent="." instance=ExtResource( 11 )]
+visible = false
 margin_left = -25.0
 margin_top = -12.0
 margin_right = 25.0

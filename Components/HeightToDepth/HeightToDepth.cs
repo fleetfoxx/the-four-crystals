@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Diagnostics;
 
+[Tool]
 public class HeightToDepth : Node2D
 {
     private Node2D _parent;
