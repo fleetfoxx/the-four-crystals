@@ -14,6 +14,5 @@ color = Color( 0.596078, 0.596078, 0.596078, 1 )
 
 [node name="Health" type="ColorRect" parent="."]
 anchor_right = 1.0
-margin_right = -120.0
 margin_bottom = 2.0
 color = Color( 0.00784314, 1, 0, 1 )

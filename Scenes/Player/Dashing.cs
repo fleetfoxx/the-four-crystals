@@ -13,6 +13,14 @@ namespace Player
 
       // save initial direction
       _direction = GetInputDirection();
+
+      _player.PhysicsCollider.Disabled = true;
+    }
+
+    public override void Exit()
+    {
+      base.Exit();
+      _player.PhysicsCollider.Disabled = false;
     }
 
     public override void Process(float delta)

@@ -8,6 +8,7 @@ public class StateMachine<TState> : Node where TState : StateNode
   public delegate void OnStateTransition(StateNode prevState, StateNode nextState);
 
   private const bool DEBUG = false;
+  private Node _owner;
 
   protected TState _currentState;
   protected Stack<string> _history = new Stack<string>();
@@ -43,9 +44,14 @@ public class StateMachine<TState> : Node where TState : StateNode
 
   public override void _Ready()
   {
+    _owner = this.GetExpectedOwner<Node>();
+    _owner.Connect("ready", this, nameof(HandleOwnerReady));
+  }
+
+  private void HandleOwnerReady()
+  {
     var initialState = GetChildOrNull<TState>(0);
     Debug.Assert(initialState != null);
-
     EnterState(initialState);
   }
 

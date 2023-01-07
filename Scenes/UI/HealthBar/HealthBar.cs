@@ -32,4 +32,10 @@ public class HealthBar : Control
     var healthWidth = maxWidth * healthPercentage;
     _healthRect.RectSize = new Vector2(healthWidth, _healthRect.RectSize.y);
   }
+
+  public void UpdateInfo(float health, float maxHealth)
+  {
+    Health = health;
+    MaxHealth = maxHealth;
+  }
 }

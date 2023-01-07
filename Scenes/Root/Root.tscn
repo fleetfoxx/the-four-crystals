@@ -1,5 +1,6 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
+[ext_resource path="res://Scenes/Geyser/Geyser.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scenes/Player/Player.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scenes/FollowCamera/FollowCamera.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Scenes/Enemies/DashEnemy/DashEnemy.tscn" type="PackedScene" id=4]
@@ -8,6 +9,7 @@
 [ext_resource path="res://Scenes/Enemies/HammerEnemy/HammerEnemy.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Scenes/UI/HUD/HUD.tscn" type="PackedScene" id=8]
 [ext_resource path="res://Scenes/TestTerrain/TestTerrain.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Scenes/Enemies/Bomber/Bomber.tscn" type="PackedScene" id=10]
 
 [node name="Root" type="Node2D"]
 script = ExtResource( 6 )
@@ -19,195 +21,266 @@ _stiffness = 6.0
 
 [node name="HammerEnemy" parent="." instance=ExtResource( 7 )]
 position = Vector2( 311.777, 68.0314 )
+z_index = 73
+z_as_relative = false
 __meta__ = {
 "_edit_group_": true
 }
 
 [node name="DashEnemy" parent="." instance=ExtResource( 4 )]
 position = Vector2( 106, 95 )
+z_index = 102
 __meta__ = {
 "_edit_group_": true
 }
 
 [node name="DashEnemy2" parent="." instance=ExtResource( 4 )]
 position = Vector2( -136, 384 )
+z_index = 391
 __meta__ = {
 "_edit_group_": true
 }
 
 [node name="DashEnemy3" parent="." instance=ExtResource( 4 )]
 position = Vector2( 70, 38 )
+z_index = 45
 __meta__ = {
 "_edit_group_": true
 }
 
 [node name="HUD" parent="." instance=ExtResource( 8 )]
 
-[node name="TestTerrain" parent="." instance=ExtResource( 9 )]
-
 [node name="PlayerSpawn" type="Node2D" parent="."]
-position = Vector2( 120, 304 )
+position = Vector2( -64, -168 )
 
 [node name="Boxes" type="Node2D" parent="."]
 
 [node name="Box2" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( 177, 48 )
+z_index = 52
 
 [node name="Box24" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -264, 304 )
+z_index = 308
 
 [node name="Box25" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -248, 288 )
+z_index = 292
 
 [node name="Box26" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -232, 288 )
+z_index = 292
 
 [node name="Box27" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -216, 288 )
+z_index = 292
 
 [node name="Box28" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -200, 272 )
+z_index = 276
 
 [node name="Box29" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -184, 272 )
+z_index = 276
 
 [node name="Box30" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -168, 272 )
+z_index = 276
 
 [node name="Box31" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -224, 384 )
+z_index = 388
 
 [node name="Box32" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -40, 360 )
+z_index = 364
 
 [node name="Box33" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -88, 440 )
+z_index = 444
 
 [node name="Box34" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -152, 328 )
+z_index = 332
 
 [node name="Box35" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -88, 272 )
+z_index = 276
 
 [node name="Box36" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -72, 272 )
+z_index = 276
 
 [node name="Box37" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -56, 272 )
+z_index = 276
 
 [node name="Box38" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -40, 288 )
+z_index = 292
 
 [node name="Box39" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -24, 288 )
+z_index = 292
 
 [node name="Box40" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -8, 304 )
+z_index = 308
 
 [node name="Box3" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -280, 320 )
+z_index = 324
 
 [node name="Box5" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -280, 336 )
+z_index = 340
 
 [node name="Box6" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -280, 352 )
+z_index = 356
 
 [node name="Box7" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -280, 368 )
+z_index = 372
 
 [node name="Box8" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -280, 384 )
+z_index = 388
 
 [node name="Box9" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -280, 400 )
+z_index = 404
 
 [node name="Box10" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -280, 416 )
+z_index = 420
 
 [node name="Box11" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -280, 432 )
+z_index = 436
 
 [node name="Box13" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -280, 448 )
+z_index = 452
 
 [node name="Box42" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -264, 464 )
+z_index = 468
 
 [node name="Box43" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -248, 480 )
+z_index = 484
 
 [node name="Box44" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -232, 480 )
+z_index = 484
 
 [node name="Box45" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -216, 496 )
+z_index = 500
 
 [node name="Box46" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -200, 496 )
+z_index = 500
 
 [node name="Box47" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -184, 496 )
+z_index = 500
 
 [node name="Box48" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -168, 496 )
+z_index = 500
 
 [node name="Box49" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -152, 496 )
+z_index = 500
 
 [node name="Box50" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -136, 496 )
+z_index = 500
 
 [node name="Box51" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -120, 496 )
+z_index = 500
 
 [node name="Box52" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -104, 496 )
+z_index = 500
 
 [node name="Box53" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -88, 496 )
+z_index = 500
 
 [node name="Box54" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -72, 496 )
+z_index = 500
 
 [node name="Box55" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -56, 496 )
+z_index = 500
 
 [node name="Box56" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -40, 480 )
+z_index = 484
 
 [node name="Box57" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -24, 480 )
+z_index = 484
 
 [node name="Box58" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( -8, 464 )
+z_index = 468
 
 [node name="Box15" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( 8, 320 )
+z_index = 324
 
 [node name="Box16" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( 8, 336 )
+z_index = 340
 
 [node name="Box17" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( 8, 352 )
+z_index = 356
 
 [node name="Box18" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( 8, 368 )
+z_index = 372
 
 [node name="Box19" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( 8, 384 )
+z_index = 388
 
 [node name="Box20" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( 8, 400 )
+z_index = 404
 
 [node name="Box21" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( 8, 416 )
+z_index = 420
 
 [node name="Box22" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( 8, 432 )
+z_index = 436
 
 [node name="Box23" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( 8, 448 )
+z_index = 452
 
 [node name="Box4" parent="Boxes" instance=ExtResource( 5 )]
 position = Vector2( 354, 137 )
+z_index = 141
+
+[node name="Geyser" parent="." instance=ExtResource( 1 )]
+position = Vector2( 328, -352 )
+z_index = -359
+
+[node name="Geyser2" parent="." instance=ExtResource( 1 )]
+position = Vector2( 288, -304 )
+z_index = -311
+
+[node name="Terrain" parent="." instance=ExtResource( 9 )]
+
+[node name="Bomber" parent="." instance=ExtResource( 10 )]
+position = Vector2( -144, -168 )
+z_index = -144

@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scenes/Tree/Tree.cs" type="Script" id=1]
+[ext_resource path="res://Scenes/Stick/Stick.tscn" type="PackedScene" id=2]
+
+[node name="Tree" type="Area2D"]
+z_as_relative = false
+monitoring = false
+script = ExtResource( 1 )
+_stickScene = ExtResource( 2 )
+
+[node name="Leaves" type="ColorRect" parent="."]
+margin_left = -40.0
+margin_top = -128.0
+margin_right = 40.0
+margin_bottom = -64.0
+color = Color( 0, 0.4, 0.0980392, 1 )
+
+[node name="Trunk" type="ColorRect" parent="."]
+margin_left = -4.0
+margin_top = -64.0
+margin_right = 4.0
+color = Color( 0.47451, 0.254902, 0, 1 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+position = Vector2( 0, -64 )
+polygon = PoolVector2Array( -40, -64, -40, 0, -4, 0, -4, 64, 4, 64, 4, 0, 40, 0, 40, -64 )

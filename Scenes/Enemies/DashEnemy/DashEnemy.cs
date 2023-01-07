@@ -50,6 +50,7 @@ namespace Enemies.DashEnemy
       _aggro.Connect("body_exited", this, nameof(HandleAggroBodyExited));
 
       _hitBox = this.GetExpectedNode<Area2D>("HitBox");
+      _hitBox.Connect("body_entered", this, nameof(HandleBodyEnteredHitBox));
       _hitBox.Connect("area_entered", this, nameof(HandleAreaEnteredHitBox));
 
       _feetBox = this.GetExpectedNode<Area2D>("FeetBox");
@@ -79,7 +80,20 @@ namespace Enemies.DashEnemy
 
       if (IsDocile && _attackTargets.Any())
       {
-        _stateMachine.TransitionTo(nameof(ChargingUp), _attackTargets[0]);
+        while (_attackTargets.Any())
+        {
+          var target = _attackTargets[0];
+
+          if (IsInstanceValid(target))
+          {
+            _stateMachine.TransitionTo(nameof(ChargingUp), target);
+            break;
+          }
+          else
+          {
+            _attackTargets.Remove(target);
+          }
+        }
       }
     }
 
@@ -99,6 +113,15 @@ namespace Enemies.DashEnemy
       }
     }
 
+    private void HandleBodyEnteredHitBox(Node node)
+    {
+      if (node is Box)
+      {
+        ((Box)node).Destroy();
+        _stateMachine.TransitionTo(nameof(Idle));
+      }
+    }
+
     private void HandleAreaEnteredHitBox(Area2D area)
     {
       if (area.Owner is Player.Player)
@@ -107,8 +130,8 @@ namespace Enemies.DashEnemy
         {
           var player = (Player.Player)area.Owner;
           var direction = Velocity.Normalized();
-          player.ApplyKnockback(direction, ChargeSpeed);
-          player.ApplyDamage(_damage);
+          player.ApplyKnockback(direction * ChargeSpeed);
+          player.ApplyDamage(this, _damage);
           _stateMachine.TransitionTo(nameof(ChargingUp), area.Owner);
         }
       }

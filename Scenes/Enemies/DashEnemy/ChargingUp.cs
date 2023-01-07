@@ -16,8 +16,14 @@ namespace Enemies.DashEnemy
 
     protected override void OnTimeout()
     {
-      Debug.WriteLine(_target.Name);
-      TransitionTo(nameof(Attacking), _target);
+      if (IsInstanceValid(_target))
+      {
+        TransitionTo(nameof(Attacking), _target);
+      }
+      else
+      {
+        TransitionTo(nameof(Idle));
+      }
     }
   }
 }

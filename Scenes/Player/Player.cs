@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace Player
 {
-  public class Player : KinematicBody2D
+  public class Player : KinematicBody2D, IDamageable, IKnockable
   {
     [Signal]
     public delegate void HealthChangedSignal(int health);
@@ -12,8 +12,7 @@ namespace Player
     [Signal]
     public delegate void DeathSignal();
 
-    [Export]
-    private int _maxHealth = 5;
+
     private int _health = 0;
     public int Health
     {
@@ -34,6 +33,9 @@ namespace Player
     }
 
     [Export]
+    public int MaxHealth { get; set; } = 5;
+
+    [Export]
     public float WalkSpeed = 150f;
 
     [Export]
@@ -41,6 +43,10 @@ namespace Player
 
     [Export]
     public float KnockbackSpeed = 300f;
+
+    [Export]
+    private float _immunityDuration = 1f;
+    public bool IsImmune { get { return !_immunityTimer.IsStopped(); } }
 
 
     #region Status effects
@@ -55,8 +61,10 @@ namespace Player
     private PlayerStateMachine _stateMachine;
     private Area2D _hitBox;
     private Area2D _feetBox;
+    private Timer _immunityTimer;
     private Label _stateLabel;
 
+    public CollisionShape2D PhysicsCollider;
     public Vector2 Velocity = Vector2.Zero;
 
     public override void _Ready()
@@ -72,9 +80,14 @@ namespace Player
       _feetBox.Connect("area_entered", this, nameof(HandleFeetBoxEntered));
       _feetBox.Connect("area_exited", this, nameof(HandleFeetBoxExited));
 
+      _immunityTimer = this.GetExpectedNode<Timer>("ImmunityTimer");
+      _immunityTimer.Connect("timeout", this, nameof(HandleImmunityTimerTimeout));
+
       _stateLabel = GetNodeOrNull<Label>("StateLabel");
 
-      Health = _maxHealth;
+      PhysicsCollider = this.GetExpectedNode<CollisionShape2D>("PhysicsCollider");
+
+      Health = MaxHealth;
 
       // HACK: _Ready() is called before the Root node has set up the signal
       // connection so the first signal is missed. Use a timer to delay the
@@ -108,6 +121,8 @@ namespace Player
 
     public override void _PhysicsProcess(float delta)
     {
+      _hitBox.Monitorable = !IsDashing;
+
       Velocity = MoveAndSlide(Velocity);
 
       if (Velocity.IsEqualApprox(Vector2.Zero))
@@ -116,16 +131,18 @@ namespace Player
       }
     }
 
-    public void ApplyDamage(int damage)
+    public void ApplyDamage(Node source, int damage)
     {
+      if (IsImmune) return;
       Health -= damage;
+      _immunityTimer.Start(_immunityDuration);
     }
 
-    public void ApplyKnockback(Vector2 direction, float power)
+    public void ApplyKnockback(Vector2 force)
     {
       if (!(_stateMachine.GetState() is KnockedBack))
       {
-        _stateMachine.TransitionTo(nameof(KnockedBack), direction, power);
+        _stateMachine.TransitionTo(nameof(KnockedBack), force);
       }
     }
 
@@ -148,6 +165,11 @@ namespace Player
       {
         _stateMachine.TransitionTo(nameof(Falling));
       }
+    }
+
+    private void HandleImmunityTimerTimeout()
+    {
+
     }
 
     private void CheckForStatusEffects()
@@ -175,7 +197,7 @@ namespace Player
 
     private void HandleBurnDamage(int damage)
     {
-      ApplyDamage(damage);
+      ApplyDamage(this, damage);
     }
   }
 }
