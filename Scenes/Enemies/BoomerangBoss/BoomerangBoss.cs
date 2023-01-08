@@ -53,12 +53,13 @@ public class BoomerangBoss : Area2D, IDamageable
     var direction = GlobalPosition.DirectionTo(_target.GlobalPosition);
     var distance = GlobalPosition.DistanceTo(_target.GlobalPosition) / 2;
     var angle = Mathf.Atan2(direction.y, direction.x) * 180 / Mathf.Pi - 180; // TODO: If I reverse x and y do I get the same result as -180?
+    var directionRandomization = GD.Randf() < 0.5 ? -1 : 1;
     var path = new BoomerangPath
     {
       InitialAngle = angle,
       Radius = distance,
-      Speed = _boomerangSpeed
-    };
+      Speed = _boomerangSpeed * directionRandomization
+  };
 
     AddChild(boomerang);
     boomerang.GlobalPosition = direction * distance;
@@ -97,7 +98,8 @@ public class BoomerangBoss : Area2D, IDamageable
       Health -= amount;
     }
 
-    if (Health <= 0) {
+    if (Health <= 0)
+    {
       var orb = _greenOrbScene.Instance();
       GetParent().AddChild(orb);
 
