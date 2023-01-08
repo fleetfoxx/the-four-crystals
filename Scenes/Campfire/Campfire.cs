@@ -109,8 +109,26 @@ public class Campfire : Area2D, IInteractable, IDestructible
     }
   }
 
-  public void Destroy()
+  /// <summary>
+  /// Remove all the sticks in this campfire. If it's lit, put it out.
+  /// </summary>
+  public void Destroy(Node source)
   {
-    QueueFree();
+    foreach (Node child in GetChildren())
+    {
+      if (child is Stick)
+      {
+        child.QueueFree();
+      }
+    }
+
+    // HACK: Light the boomerang on fire before IsLit is flipped. We can't be
+    // sure HandleAreaEntered above will fire first.
+    if (IsLit && source is Boomerang)
+    {
+      ((Boomerang)source).IsOnFire = true;
+    }
+
+    IsLit = false;
   }
 }

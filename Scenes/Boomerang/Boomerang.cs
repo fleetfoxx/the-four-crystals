@@ -71,7 +71,7 @@ public class Boomerang : Node2D, IFlammable
 
     if (area is IDestructible)
     {
-      ((IDestructible)area).Destroy();
+      ((IDestructible)area).Destroy(this);
     }
   }
 }

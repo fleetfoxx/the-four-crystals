@@ -35,7 +35,7 @@ public class MovementTestBall : KinematicBody2D
   private float _acceleration;
   private bool _canDodge = true;
   private bool _isDodging = false;
-  private Node _carrying = null;
+  private Node2D _carrying = null;
 
   private Area2D _pickupArea;
 
@@ -122,15 +122,10 @@ public class MovementTestBall : KinematicBody2D
     // If there's nothing to interact with or pick up, check if there's anything to drop.
     if (_carrying != null)
     {
-      if (_carrying is Stick)
-      {
-        var campfire = CampfireScene.Instance<Campfire>();
-        RemoveChild(_carrying);
-        campfire.Interact(_carrying);
-        GetParent().AddChild(campfire);
-        campfire.GlobalPosition = GlobalPosition;
-        _carrying = null;
-      }
+      RemoveChild(_carrying);
+      GetParent().AddChild(_carrying);
+      _carrying.GlobalPosition = GlobalPosition;
+      _carrying = null;
     }
   }
 

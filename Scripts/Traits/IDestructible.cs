@@ -1,4 +1,6 @@
+using Godot;
+
 public interface IDestructible
 {
-  void Destroy();
+  void Destroy(Node source);
 }
