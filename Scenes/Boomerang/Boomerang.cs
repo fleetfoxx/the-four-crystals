@@ -26,6 +26,7 @@ public class Boomerang : Node2D, IFlammable
 
     _collider = this.GetExpectedNode<Area2D>("Collider");
     _collider.Connect("area_entered", this, nameof(HandleAreaEntered));
+    _collider.Connect("body_entered", this, nameof(HandleBodyEntered));
     _color = this.GetExpectedNode<ColorRect>("Collider/ColorRect");
   }
 
@@ -63,15 +64,41 @@ public class Boomerang : Node2D, IFlammable
 
   private void HandleAreaEntered(Area2D area)
   {
-    if (area is IDamageable)
+    InflictDamage(area);
+    InflictDestruction(area);
+  }
+
+  private void HandleBodyEntered(Node body)
+  {
+    InflictDamage(body);
+    InflictDestruction(body);
+  }
+
+  private void InflictDamage(Node node)
+  {
+    var damage = IsOnFire ? 2 : 1;
+
+    if (node is IDamageable)
     {
-      var damage = IsOnFire ? 2 : 1;
-      ((IDamageable)area).ApplyDamage(this, damage);
+      ((IDamageable)node).ApplyDamage(this, damage);
     }
 
-    if (area is IDestructible)
+    if (node.Owner is IDamageable)
     {
-      ((IDestructible)area).Destroy(this);
+      ((IDamageable)node.Owner).ApplyDamage(this, damage);
+    }
+  }
+
+  private void InflictDestruction(Node node)
+  {
+    if (node is IDestructible)
+    {
+      ((IDestructible)node).Destroy(this);
+    }
+
+    if (node.Owner is IDestructible)
+    {
+      ((IDestructible)node.Owner).Destroy(this);
     }
   }
 }

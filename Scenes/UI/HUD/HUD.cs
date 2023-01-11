@@ -6,24 +6,21 @@ public class HUD : CanvasLayer
   [Export]
   private PackedScene _healthPipScene;
 
-  private int _playerHealth = 0;
-  private VBoxContainer _healthContainer;
+  private BoxContainer _healthContainer;
 
   public override void _Ready()
   {
-    _healthContainer = this.GetExpectedNode<VBoxContainer>("HealthContainer");
+    _healthContainer = this.GetExpectedNode<BoxContainer>("MarginContainer/HealthContainer");
   }
 
-  public void SetPlayerHealth(int health)
+  public override void _Process(float delta)
   {
-    _playerHealth = health;
-
     foreach (Node child in _healthContainer.GetChildren())
     {
       _healthContainer.RemoveChild(child);
     }
 
-    for (var i = 0; i < health; i++)
+    for (var i = 0; i < PlayerManager.Health; i++)
     {
       var pip = _healthPipScene.Instance();
       _healthContainer.AddChild(pip);

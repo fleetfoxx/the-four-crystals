@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 public class BoomerangBoss : Area2D, IDamageable
@@ -14,7 +15,7 @@ public class BoomerangBoss : Area2D, IDamageable
   private PackedScene _greenOrbScene;
 
   [Export]
-  private float _throwInterval = 3;
+  private float _throwInterval = 6;
 
   [Export]
   private float _boomerangSpeed = 200;
@@ -25,9 +26,12 @@ public class BoomerangBoss : Area2D, IDamageable
   [Export]
   public int MaxHealth { get; set; } = 6;
 
+  private Timer _throwTimer;
   private HealthBar _healthBar;
   private Node2D _target;
-  private bool _wasBoomerangThrown = false;
+  // Dictionary<instance, wasThrown>
+  private Dictionary<Boomerang, bool> _activeBoomerangs = new Dictionary<Boomerang, bool>();
+  private int _maxActiveBoomerangs = 1;
 
   public override void _Ready()
   {
@@ -37,7 +41,9 @@ public class BoomerangBoss : Area2D, IDamageable
     _target = GetNode<Node2D>("../MovementTestBall");
     _healthBar = this.GetExpectedNode<HealthBar>("HealthBar");
 
-    GetTree().CreateTimer(_throwInterval).Connect("timeout", this, nameof(ThrowBoomerangAtTarget));
+    _throwTimer = this.GetExpectedNode<Timer>("ThrowTimer");
+    _throwTimer.Connect("timeout", this, nameof(ThrowBoomerangAtTarget));
+    _throwTimer.Start(_throwInterval);
   }
 
   public override void _Process(float delta)
@@ -49,33 +55,36 @@ public class BoomerangBoss : Area2D, IDamageable
 
   private void ThrowBoomerangAtTarget()
   {
+    if (_activeBoomerangs.Count >= _maxActiveBoomerangs) return;
+
     var boomerang = _boomerangScene.Instance<Boomerang>();
     var direction = GlobalPosition.DirectionTo(_target.GlobalPosition);
-    var distance = GlobalPosition.DistanceTo(_target.GlobalPosition) / 2;
+    var distance = Math.Max(GlobalPosition.DistanceTo(_target.GlobalPosition) / 2, 50);
     var angle = Mathf.Atan2(direction.y, direction.x) * 180 / Mathf.Pi - 180; // TODO: If I reverse x and y do I get the same result as -180?
-    var directionRandomization = GD.Randf() < 0.5 ? -1 : 1;
+    var randomDirection = GD.Randf() < 0.5 ? -1 : 1;
+    var speed = _boomerangSpeed / distance * randomDirection;
     var path = new BoomerangPath
     {
       InitialAngle = angle,
       Radius = distance,
-      Speed = _boomerangSpeed * directionRandomization
-  };
+      Speed = speed
+    };
 
     AddChild(boomerang);
     boomerang.GlobalPosition = direction * distance;
     boomerang.Throw(path);
+
+    _activeBoomerangs.Add(boomerang, false);
   }
 
   private void HandleAreaEntered(Area2D area)
   {
-    if (area.Owner is Boomerang && _wasBoomerangThrown)
+    if (area.Owner is Boomerang && _activeBoomerangs[(Boomerang)area.Owner])
     {
       // "Catch" boomerang.
       var boomerang = (Boomerang)area.Owner;
+      _activeBoomerangs.Remove(boomerang);
       boomerang.QueueFree();
-
-      _wasBoomerangThrown = false;
-      GetTree().CreateTimer(_throwInterval).Connect("timeout", this, nameof(ThrowBoomerangAtTarget));
     }
   }
 
@@ -87,7 +96,7 @@ public class BoomerangBoss : Area2D, IDamageable
     if (IsInstanceValid(area) && area.Owner is Boomerang)
     {
       // "Throw" boomerang.
-      _wasBoomerangThrown = true;
+      _activeBoomerangs[(Boomerang)area.Owner] = true;
     }
   }
 
@@ -96,6 +105,8 @@ public class BoomerangBoss : Area2D, IDamageable
     if (source is Boomerang && ((Boomerang)source).IsOnFire)
     {
       Health -= amount;
+      _maxActiveBoomerangs++;
+      _throwTimer.WaitTime = _throwInterval / _maxActiveBoomerangs;
     }
 
     if (Health <= 0)

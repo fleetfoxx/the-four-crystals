@@ -5,7 +5,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 
-public class MovementTestBall : KinematicBody2D
+public class MovementTestBall : KinematicBody2D, IDamageable
 {
   [Export]
   public float MaxSpeed { get; set; } = 800;
@@ -28,6 +28,10 @@ public class MovementTestBall : KinematicBody2D
   [Export]
   public PackedScene CampfireScene { get; set; }
 
+  public int Health { get => PlayerManager.Health; set => PlayerManager.Health = value; }
+  public int MaxHealth { get => PlayerManager.MaxHealth; set => PlayerManager.MaxHealth = value; }
+  public Node2D Carrying { get; private set; } = null;
+
   private Vector2 _direction;
   private Vector2 _desiredVelocity;
   private Vector2 _velocity;
@@ -35,7 +39,6 @@ public class MovementTestBall : KinematicBody2D
   private float _acceleration;
   private bool _canDodge = true;
   private bool _isDodging = false;
-  private Node2D _carrying = null;
 
   private Area2D _pickupArea;
 
@@ -81,13 +84,13 @@ public class MovementTestBall : KinematicBody2D
   {
     foreach (Area2D area in _pickupArea.GetOverlappingAreas())
     {
-      if (_carrying == null && area is ICarrayble)
+      if (Carrying == null && area is ICarrayble)
       {
         var parent = area.GetParent();
         parent.RemoveChild(area);
         CallDeferred("add_child", area);
         area.Position = Vector2.Zero;
-        _carrying = area;
+        Carrying = area;
         return;
       }
       else if (area is IInteractable)
@@ -96,13 +99,13 @@ public class MovementTestBall : KinematicBody2D
         {
           var campfire = (Campfire)area;
 
-          if (campfire.GetNumberOfSticks() < 3 && _carrying is Stick)
+          if (campfire.GetNumberOfSticks() < 3 && Carrying is Stick)
           {
-            var wasSuccessful = campfire.Interact(_carrying);
+            var wasSuccessful = campfire.Interact(Carrying);
 
             if (wasSuccessful)
             {
-              _carrying = null;
+              Carrying = null;
             }
           }
           else if (campfire.GetNumberOfSticks() == 3 && !campfire.IsLit)
@@ -120,12 +123,12 @@ public class MovementTestBall : KinematicBody2D
     }
 
     // If there's nothing to interact with or pick up, check if there's anything to drop.
-    if (_carrying != null)
+    if (Carrying != null)
     {
-      RemoveChild(_carrying);
-      GetParent().AddChild(_carrying);
-      _carrying.GlobalPosition = GlobalPosition;
-      _carrying = null;
+      RemoveChild(Carrying);
+      GetParent().AddChild(Carrying);
+      Carrying.GlobalPosition = GlobalPosition;
+      Carrying = null;
     }
   }
 
@@ -145,5 +148,11 @@ public class MovementTestBall : KinematicBody2D
   private void OnDodgeCooldownEnd()
   {
     _canDodge = true;
+  }
+
+  public void ApplyDamage(Node source, int amount)
+  {
+    Health -= amount;
+    // TODO: handle death here or in PlayerManager 
   }
 }

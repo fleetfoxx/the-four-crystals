@@ -13,6 +13,7 @@ public class TestLevelSelect : CanvasLayer
     Button button;
 
     var buttonContainer = this.GetExpectedNode<VBoxContainer>("UI/ScrollContainer/ButtonContainer");
+    var first = true;
 
     foreach (var level in _levels)
     {
@@ -21,6 +22,12 @@ public class TestLevelSelect : CanvasLayer
       button.Text = level.Key;
       button.Connect("pressed", this, nameof(HandleButtonPressed), binds);
       buttonContainer.AddChild(button);
+
+      if (first)
+      {
+        button.GrabFocus();
+        first = false;
+      }
     }
 
     button = new Button();

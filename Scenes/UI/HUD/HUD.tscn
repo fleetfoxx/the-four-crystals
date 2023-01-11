@@ -7,10 +7,18 @@
 script = ExtResource( 1 )
 _healthPipScene = ExtResource( 2 )
 
-[node name="HealthContainer" type="VBoxContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchor_right = 1.0
 anchor_bottom = 1.0
+custom_constants/margin_top = 8
+custom_constants/margin_left = 8
+
+[node name="HealthContainer" type="HBoxContainer" parent="MarginContainer"]
 margin_left = 8.0
 margin_top = 8.0
-margin_right = 8.0
+margin_right = 16.0
+margin_bottom = 16.0
+size_flags_horizontal = 2
+size_flags_vertical = 2
 
-[node name="HealthPip" parent="HealthContainer" instance=ExtResource( 2 )]
+[node name="HealthPip" parent="MarginContainer/HealthContainer" instance=ExtResource( 2 )]

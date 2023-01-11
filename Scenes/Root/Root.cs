@@ -46,7 +46,7 @@ public class Root : Node2D
   private void HandlePlayerHealthChanged(int health)
   {
     Debug.WriteLine($"Player health changed to {health}.");
-    _hud.SetPlayerHealth(health);
+    // _hud.SetPlayerHealth(health);
   }
 
   private void HandlePlayerDeath()

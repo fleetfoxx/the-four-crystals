@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class Tree : Area2D, IDamageable
+public class Tree : StaticBody2D, IDamageable
 {
   [Export]
   private PackedScene _stickScene;

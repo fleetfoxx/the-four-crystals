@@ -10,6 +10,8 @@ extents = Vector2( 8, 8 )
 radius = 16.0
 
 [node name="MovementTestBall" type="KinematicBody2D"]
+collision_layer = 2
+collision_mask = 12
 script = ExtResource( 1 )
 CampfireScene = ExtResource( 2 )
 
@@ -24,6 +26,8 @@ color = Color( 0.235294, 0.388235, 1, 1 )
 shape = SubResource( 1 )
 
 [node name="PickupArea" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 128
 
 [node name="PickupCollider" type="CollisionShape2D" parent="PickupArea"]
 shape = SubResource( 2 )
