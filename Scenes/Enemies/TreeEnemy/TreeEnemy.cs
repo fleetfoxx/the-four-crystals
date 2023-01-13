@@ -31,10 +31,10 @@ namespace Enemies.TreeEnemy
       {
         foreach (PhysicsBody2D body in overlappingBodies)
         {
-          if (body is MovementTestBall)
+          if (body is TestPlayer)
           {
-            var player = (MovementTestBall)body;
-            if (player.Carrying is Stick)
+            var player = (TestPlayer)body;
+            if (!player.IsInvisible && player.Carrying is Stick)
             {
               Velocity = GlobalPosition.DirectionTo(player.GlobalPosition) * _speed;
               isChasing = true;

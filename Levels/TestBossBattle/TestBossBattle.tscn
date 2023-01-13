@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Levels/TestBossBattle/TestBossBattle.cs" type="Script" id=1]
 [ext_resource path="res://Scenes/FollowCamera/FollowCamera.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Scenes/MovementTestBall/MovementTestBall.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scenes/TestPlayer/TestPlayer.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Assets/Sprites/grid-bg.png" type="Texture" id=4]
 [ext_resource path="res://Scenes/Enemies/BoomerangBoss/BoomerangBoss.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Components/TreeTiles/TreeTiles.tscn" type="PackedScene" id=6]
@@ -75,8 +75,7 @@ texture = ExtResource( 4 )
 
 [node name="ObjectSort" type="YSort" parent="."]
 
-[node name="MovementTestBall" parent="ObjectSort" instance=ExtResource( 3 )]
-position = Vector2( 0, 204 )
+[node name="TestPlayer" parent="ObjectSort" instance=ExtResource( 3 )]
 
 [node name="BoomerangBoss" parent="ObjectSort" instance=ExtResource( 5 )]
 Health = 6

@@ -38,7 +38,7 @@ public class BoomerangBoss : Area2D, IDamageable
     Connect("area_entered", this, nameof(HandleAreaEntered));
     Connect("area_exited", this, nameof(HandleAreaExited));
 
-    _target = GetNode<Node2D>("../MovementTestBall");
+    _target = GetNode<Node2D>("../TestPlayer");
     _healthBar = this.GetExpectedNode<HealthBar>("HealthBar");
 
     _throwTimer = this.GetExpectedNode<Timer>("ThrowTimer");
@@ -56,6 +56,7 @@ public class BoomerangBoss : Area2D, IDamageable
   private void ThrowBoomerangAtTarget()
   {
     if (_activeBoomerangs.Count >= _maxActiveBoomerangs) return;
+    if (_target is IInvisible && ((IInvisible)_target).IsInvisible) return;
 
     var boomerang = _boomerangScene.Instance<Boomerang>();
     var direction = GlobalPosition.DirectionTo(_target.GlobalPosition);

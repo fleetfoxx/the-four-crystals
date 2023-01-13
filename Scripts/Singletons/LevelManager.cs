@@ -7,6 +7,7 @@ public static class Levels
   public const string TestLevelSelect = "res://Scenes/UI/TestLevelSelect/TestLevelSelect.tscn";
   public const string BossBattleTest = "res://Levels/TestBossBattle/TestBossBattle.tscn";
   public const string MovementTest = "res://Levels/MovementTest/MovementTest.tscn";
+  public const string TestStealth = "res://Levels/TestStealth/TestStealth.tscn";
   public const string Playground = "res://Levels/Playground/Playground.tscn";
 }
 

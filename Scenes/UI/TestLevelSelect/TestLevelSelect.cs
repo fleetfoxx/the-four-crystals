@@ -5,7 +5,8 @@ public class TestLevelSelect : CanvasLayer
 {
   private Dictionary<string, string> _levels = new Dictionary<string, string> {
     {"Movement Test", Levels.MovementTest},
-    {"Boss Battle Test", Levels.BossBattleTest}
+    {"Boss Battle Test", Levels.BossBattleTest},
+    {"Test Stealth", Levels.TestStealth},
   };
 
   public override void _Ready()
