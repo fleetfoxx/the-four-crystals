@@ -4,10 +4,16 @@ using Godot;
 public class HealthBar : Control
 {
   [Export]
-  public float MaxHealth = 100;
+  public float MaxHealth { get; set; } = 100;
 
   [Export]
-  public float Health = 100;
+  public float Health { get; set; } = 100;
+
+  [Export]
+  public Color ForegroundColor { get; set; } = Colors.Green;
+
+  [Export]
+  public Color BackgroundColor { get; set; } = Colors.White;
 
   private ColorRect _backgroundRect;
   private ColorRect _healthRect;
@@ -31,6 +37,9 @@ public class HealthBar : Control
     var healthPercentage = Health / MaxHealth;
     var healthWidth = maxWidth * healthPercentage;
     _healthRect.RectSize = new Vector2(healthWidth, _healthRect.RectSize.y);
+
+    _backgroundRect.Color = BackgroundColor;
+    _healthRect.Color = ForegroundColor;
   }
 
   public void UpdateInfo(float health, float maxHealth)

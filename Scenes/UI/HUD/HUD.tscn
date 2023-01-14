@@ -1,19 +1,14 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Scenes/UI/HUD/HUD.cs" type="Script" id=1]
 [ext_resource path="res://Scenes/UI/HUD/HealthPip.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Scenes/UI/HealthBar/HealthBar.tscn" type="PackedScene" id=3]
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource( 1 )
 _healthPipScene = ExtResource( 2 )
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
-custom_constants/margin_top = 8
-custom_constants/margin_left = 8
-
-[node name="HealthContainer" type="HBoxContainer" parent="MarginContainer"]
+[node name="HealthContainer" type="HBoxContainer" parent="."]
 margin_left = 8.0
 margin_top = 8.0
 margin_right = 16.0
@@ -21,4 +16,29 @@ margin_bottom = 16.0
 size_flags_horizontal = 2
 size_flags_vertical = 2
 
-[node name="HealthPip" parent="MarginContainer/HealthContainer" instance=ExtResource( 2 )]
+[node name="HealthPip" parent="HealthContainer" instance=ExtResource( 2 )]
+
+[node name="HealthPip2" parent="HealthContainer" instance=ExtResource( 2 )]
+margin_left = 12.0
+margin_right = 20.0
+
+[node name="HealthPip3" parent="HealthContainer" instance=ExtResource( 2 )]
+margin_left = 24.0
+margin_right = 32.0
+
+[node name="HealthPip4" parent="HealthContainer" instance=ExtResource( 2 )]
+margin_left = 36.0
+margin_right = 44.0
+
+[node name="HealthPip5" parent="HealthContainer" instance=ExtResource( 2 )]
+margin_left = 48.0
+margin_right = 56.0
+
+[node name="StaminaBar" parent="." instance=ExtResource( 3 )]
+margin_left = 8.0
+margin_top = 19.0
+margin_right = 108.0
+margin_bottom = 21.0
+size_flags_vertical = 2
+ForegroundColor = Color( 1, 1, 1, 1 )
+BackgroundColor = Color( 0, 0, 0, 1 )

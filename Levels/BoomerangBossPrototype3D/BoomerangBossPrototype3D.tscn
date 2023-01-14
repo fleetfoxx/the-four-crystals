@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Levels/BaseTestLevel3D/BaseTestLevel3D.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Levels/BoomerangBossPrototype3D/BoomerangBossPrototype3D.cs" type="Script" id=2]
+[ext_resource path="res://Scenes/Enemies/BoomerangBoss3D/BoomerangBoss3D.tscn" type="PackedScene" id=3]
+
+[node name="BoomerangBossPrototype3D" instance=ExtResource( 1 )]
+script = ExtResource( 2 )
+
+[node name="Test3DPlayer" parent="." index="1"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 17.8803, 0, 16.7562 )
+
+[node name="BoomerangBoss3D" parent="." index="4" instance=ExtResource( 3 )]

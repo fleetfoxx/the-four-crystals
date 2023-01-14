@@ -7,10 +7,12 @@ public class HUD : CanvasLayer
   private PackedScene _healthPipScene;
 
   private BoxContainer _healthContainer;
+  private HealthBar _staminaBar;
 
   public override void _Ready()
   {
-    _healthContainer = this.GetExpectedNode<BoxContainer>("MarginContainer/HealthContainer");
+    _healthContainer = this.GetExpectedNode<BoxContainer>("HealthContainer");
+    _staminaBar = this.GetExpectedNode<HealthBar>("StaminaBar");
   }
 
   public override void _Process(float delta)
@@ -25,5 +27,7 @@ public class HUD : CanvasLayer
       var pip = _healthPipScene.Instance();
       _healthContainer.AddChild(pip);
     }
+
+    _staminaBar.UpdateInfo(PlayerManager.Stamina, PlayerManager.MaxStamina);
   }
 }

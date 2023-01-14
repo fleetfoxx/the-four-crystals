@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scenes/Enemies/BoomerangBoss3D/ThrownObject.cs" type="Script" id=1]
+
+[node name="ThrownObject" type="PathFollow"]
+transform = Transform( 0.917813, 3.49063e-06, -0.397011, -5.13734e-07, 1, 7.60461e-06, 0.397011, -6.77565e-06, 0.917813, 0, -2, 0 )
+script = ExtResource( 1 )

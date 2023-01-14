@@ -7,6 +7,8 @@ public class TestLevelSelect : CanvasLayer
     {"Movement Test", Levels.MovementTest},
     {"Boss Battle Test", Levels.BossBattleTest},
     {"Test Stealth", Levels.TestStealth},
+    {"Movement Test 3D", Levels.MovementTest3D},
+    {"Boomerang Boss Prototype 3D", Levels.BoomerangBossPrototype3D},
   };
 
   public override void _Ready()

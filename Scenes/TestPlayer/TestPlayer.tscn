@@ -30,6 +30,8 @@ tracks/0/keys = {
 collision_layer = 2
 collision_mask = 396
 script = ExtResource( 1 )
+StealthStaminaCost = 4.0
+StaminaRecharge = 8.0
 
 [node name="Circle" parent="." instance=ExtResource( 2 )]
 Color = Color( 0.176471, 0.596078, 1, 1 )

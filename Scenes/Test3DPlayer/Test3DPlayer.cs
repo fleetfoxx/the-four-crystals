@@ -1,11 +1,8 @@
-/* Based on https://github.com/Shinjingi/Unity2D-Platform-Character-Controller/blob/main/Assets/Scripts/Capabilities/Move.cs */
-
 using Godot;
 using System;
 using System.Diagnostics;
-using System.Linq;
 
-public class TestPlayer : KinematicBody2D, IDamageable, IInvisible
+public class Test3DPlayer : KinematicBody
 {
   [Export]
   public float MaxSpeed { get; set; } = 800;
@@ -17,13 +14,13 @@ public class TestPlayer : KinematicBody2D, IDamageable, IInvisible
   public float SneakSpeedScale { get; set; } = 0.5f;
 
   [Export]
-  public float StealthStaminaCost { get; set; } = 0.1f;
+  public float StealthStaminaCost { get; set; } = 4;
 
   [Export]
   public float DodgeStaminaCost { get; set; } = 10;
 
   [Export]
-  public float StaminaRecharge { get; set; } = 0.2f;
+  public float StaminaRecharge { get; set; } = 8;
 
   [Export]
   public float DodgeDuration { get; set; } = 0.1f;
@@ -37,40 +34,33 @@ public class TestPlayer : KinematicBody2D, IDamageable, IInvisible
   [Export]
   public float Friction { get; set; } = 500;
 
-  [Export]
-  public PackedScene CampfireScene { get; set; }
-
   public int MaxHealth { get => PlayerManager.MaxHealth; set => PlayerManager.MaxHealth = value; }
   public int Health { get => PlayerManager.Health; set => PlayerManager.Health = value; }
   public float Stamina { get => PlayerManager.Stamina; set => PlayerManager.Stamina = value; }
   public float MaxStamina { get => PlayerManager.MaxStamina; set => PlayerManager.MaxStamina = value; }
 
-  public Node2D Carrying { get; private set; } = null;
+  public Spatial Carrying { get; private set; } = null;
   public bool IsInvisible { get; private set; }
 
   private Vector2 _direction;
   private Vector2 _desiredVelocity;
-  private Vector2 _velocity;
+  private Vector3 _velocity;
   private float _maxSpeedChange;
   private float _acceleration;
   private bool _canDodge = true;
   private bool _isDodging = false;
 
-  private Area2D _pickupArea;
+  private FollowCamera3D _camera;
   private AnimationPlayer _animationPlayer;
 
   public override void _Ready()
   {
-    base._Ready();
-
-    _pickupArea = this.GetExpectedNode<Area2D>("PickupArea");
+    _camera = this.GetExpectedNode<FollowCamera3D>("../FollowCamera3D");
     _animationPlayer = this.GetExpectedNode<AnimationPlayer>("AnimationPlayer");
   }
 
   public override void _Process(float delta)
   {
-    base._Process(delta);
-
     if (Input.IsActionJustPressed("stealth"))
     {
       IsInvisible = true;
@@ -114,6 +104,7 @@ public class TestPlayer : KinematicBody2D, IDamageable, IInvisible
     }
 
     _direction = Input.GetVector("move_left", "move_right", "move_up", "move_down");
+    _direction = _direction.Rotated(-_camera.Rotation.y);
 
     if (_isDodging)
     {
@@ -136,65 +127,10 @@ public class TestPlayer : KinematicBody2D, IDamageable, IInvisible
     }
   }
 
-  private void HandleInteract()
-  {
-    Debug.WriteLine(">> Handling interact");
-
-    foreach (Area2D area in _pickupArea.GetOverlappingAreas())
-    {
-      if (!IsInvisible && Carrying == null && area is ICarrayble)
-      {
-        var parent = area.GetParent();
-        parent.RemoveChild(area);
-        CallDeferred("add_child", area);
-        area.Position = Vector2.Zero;
-        Carrying = area;
-        Debug.WriteLine($">> Picking up carryable {area.Name}");
-        return;
-      }
-      else if (area is IInteractable)
-      {
-        if (area is Campfire)
-        {
-          Debug.WriteLine($">> Interacting with campfire");
-          var campfire = (Campfire)area;
-
-          if (campfire.GetNumberOfSticks() < 3 && Carrying is Stick)
-          {
-            var wasSuccessful = campfire.Interact(Carrying);
-
-            if (wasSuccessful)
-            {
-              Carrying = null;
-            }
-          }
-          else if (campfire.GetNumberOfSticks() == 3 && !campfire.IsLit)
-          {
-            campfire.Interact();
-          }
-          return;
-        }
-        else
-        {
-          Debug.WriteLine($">> Interacting with interactable {area.Name}");
-          ((IInteractable)area).Interact();
-          return;
-        }
-      }
-    }
-
-    // If there's nothing to interact with or pick up, check if there's anything to drop.
-    if (Carrying != null)
-    {
-      DropCarriedObject();
-    }
-  }
-
   public override void _PhysicsProcess(float delta)
   {
-    base._PhysicsProcess(delta);
     _maxSpeedChange = MaxAcceleration * delta;
-    _velocity = _velocity.LinearInterpolate(_desiredVelocity, _maxSpeedChange);
+    _velocity = _velocity.LinearInterpolate(new Vector3(_desiredVelocity.x, 0, _desiredVelocity.y), _maxSpeedChange);
     _velocity = MoveAndSlide(_velocity);
   }
 
@@ -208,17 +144,16 @@ public class TestPlayer : KinematicBody2D, IDamageable, IInvisible
     _canDodge = true;
   }
 
-  public void ApplyDamage(Node source, int amount)
-  {
-    Health -= amount;
-    // TODO: handle death here or in PlayerManager 
-  }
-
   private void DropCarriedObject()
   {
     RemoveChild(Carrying);
     GetParent().AddChild(Carrying);
-    Carrying.GlobalPosition = GlobalPosition;
+    Carrying.GlobalTranslation = GlobalTranslation;
     Carrying = null;
+  }
+
+  private void HandleInteract()
+  {
+    Debug.WriteLine(">> Handling interact");
   }
 }
