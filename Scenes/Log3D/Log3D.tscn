@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Scenes/Log3D/Log3D.cs" type="Script" id=1]
+
+[sub_resource type="SpatialMaterial" id=1]
+albedo_color = Color( 0.470588, 0.341176, 0.0431373, 1 )
+
+[sub_resource type="CylinderMesh" id=2]
+material = SubResource( 1 )
+top_radius = 0.5
+bottom_radius = 0.5
+
+[sub_resource type="CylinderShape" id=3]
+radius = 0.5
+
+[node name="Log3D" type="Area"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0 )
+collision_layer = 128
+collision_mask = 2
+script = ExtResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="."]
+transform = Transform( -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0 )
+mesh = SubResource( 2 )
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0 )
+shape = SubResource( 3 )

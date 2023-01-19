@@ -11,6 +11,7 @@ public static class Levels
   public const string Playground = "res://Levels/Playground/Playground.tscn";
   public const string MovementTest3D = "res://Levels/MovementTest3D/MovementTest3D.tscn";
   public const string BoomerangBossPrototype3D = "res://Levels/BoomerangBossPrototype3D/BoomerangBossPrototype3D.tscn";
+  public const string NoiseBossPrototype = "res://Levels/NoiseBossPrototype3D/NoiseBossPrototype3D.tscn";
 }
 
 public class LevelManager : Node

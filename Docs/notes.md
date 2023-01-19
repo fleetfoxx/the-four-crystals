@@ -11,8 +11,10 @@
 
 # Boss prototype ideas
 - spider that spins web around arena, player must lead spider in order to take advantage of the web in some way
+  - sneak to catch bugs and use them to bait the spider through a cave
 - blind monster that reacts to sound, trick the boss into injuring itself using sound
 
 # Mechanic prototype ideas
 - sneak/stealth (reduce noise and visibility)
   - Disguise self as plant/animal/monster/last thing you touched? to act as camouflage
+  - environmental sounds

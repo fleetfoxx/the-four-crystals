@@ -142,7 +142,7 @@ public class TestPlayer : KinematicBody2D, IDamageable, IInvisible
 
     foreach (Area2D area in _pickupArea.GetOverlappingAreas())
     {
-      if (!IsInvisible && Carrying == null && area is ICarrayble)
+      if (!IsInvisible && Carrying == null && area is ICarryable)
       {
         var parent = area.GetParent();
         parent.RemoveChild(area);

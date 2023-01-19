@@ -1,0 +1,41 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Scenes/UI/HealthBar/HealthBar.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Scenes/UI/HealthBar3D/HealthBar3D.cs" type="Script" id=2]
+
+[sub_resource type="QuadMesh" id=1]
+size = Vector2( 50, 2 )
+
+[sub_resource type="ViewportTexture" id=3]
+viewport_path = NodePath("Viewport")
+
+[sub_resource type="SpatialMaterial" id=2]
+resource_local_to_scene = true
+flags_unshaded = true
+flags_albedo_tex_force_srgb = true
+params_billboard_mode = 1
+params_billboard_keep_scale = true
+albedo_texture = SubResource( 3 )
+
+[node name="HealthBar3D" type="Position3D"]
+transform = Transform( 0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0 )
+script = ExtResource( 2 )
+Health = 9
+
+[node name="Viewport" type="Viewport" parent="."]
+size = Vector2( 50, 2 )
+
+[node name="GUI" type="Control" parent="Viewport"]
+margin_right = 50.0
+margin_bottom = 2.0
+
+[node name="HealthBar" parent="Viewport/GUI" instance=ExtResource( 1 )]
+margin_right = 50.0
+MaxHealth = 10.0
+Health = 9.0
+
+[node name="Quad" type="MeshInstance" parent="."]
+layers = 2
+cast_shadow = 0
+mesh = SubResource( 1 )
+material/0 = SubResource( 2 )

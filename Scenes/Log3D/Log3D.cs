@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class Stick : Area2D, ICarryable
+public class Log3D : Area, ICarryable
 {
   public void DisableInteraction()
   {

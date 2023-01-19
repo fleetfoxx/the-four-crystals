@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Scenes/Enemies/BoomerangBoss3D/BoomerangBoss3D.cs" type="Script" id=1]
 [ext_resource path="res://Scenes/Boomerang3D/Boomerang3D.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Scenes/Enemies/BoomerangBoss3D/ThrowPath.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scenes/UI/HealthBar3D/HealthBar3D.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scenes/GreenOrb3D/GreenOrb3D.tscn" type="PackedScene" id=4]
 
 [sub_resource type="SpatialMaterial" id=4]
 albedo_color = Color( 1, 0, 0, 1 )
@@ -20,10 +21,13 @@ radius = 2.0
 
 [node name="BoomerangBoss3D" type="KinematicBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0 )
-collision_layer = 4
+collision_layer = 68
 collision_mask = 8
 script = ExtResource( 1 )
 _boomerangScene = ExtResource( 2 )
+_greenOrbScene = ExtResource( 4 )
+_throwInterval = 4.0
+_boomerangSpeed = 20.0
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
 mesh = SubResource( 1 )
@@ -32,11 +36,14 @@ mesh = SubResource( 1 )
 shape = SubResource( 2 )
 
 [node name="ThrowCatchArea" type="Area" parent="."]
+collision_layer = 4
+collision_mask = 8
 monitorable = false
 
 [node name="CollisionShape" type="CollisionShape" parent="ThrowCatchArea"]
 shape = SubResource( 3 )
 
-[node name="ThrowPath" parent="." instance=ExtResource( 3 )]
-
 [node name="ThrowTimer" type="Timer" parent="."]
+
+[node name="HealthBar3D" parent="." instance=ExtResource( 3 )]
+transform = Transform( 0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 3.8, 0 )

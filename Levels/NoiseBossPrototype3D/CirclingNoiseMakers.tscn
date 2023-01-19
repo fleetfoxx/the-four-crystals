@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Levels/NoiseBossPrototype3D/NoiseMakerPathFollow.cs" type="Script" id=1]
+[ext_resource path="res://Scenes/Enemies/NoiseBoss3D/NoiseMakerPathFollow.tscn" type="PackedScene" id=2]
+
+[sub_resource type="Curve3D" id=1]
+_data = {
+"points": PoolVector3Array( 0, 0, 0, 0, 0, 0, 0, 0, -18, 0, 0, -18, 0, 0, 18, -18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0, 18, 0, 0, -18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -18 ),
+"tilts": PoolRealArray( 0, 0, 0, 0, 0 )
+}
+
+[node name="Path" type="Path"]
+visible = false
+curve = SubResource( 1 )
+
+[node name="PathFollow" type="PathFollow" parent="." instance=ExtResource( 2 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -18 )
+script = ExtResource( 1 )
+_speed = 5.0
+
+[node name="PathFollow2" type="PathFollow" parent="." instance=ExtResource( 2 )]
+transform = Transform( -0.568826, 0, 0.822459, 0, 1, 0, -0.822459, 0, -0.568826, -14.4656, 0, 11.3975 )
+offset = 40.7295
+script = ExtResource( 1 )
+_speed = 5.0
+
+[node name="PathFollow3" type="PathFollow" parent="." instance=ExtResource( 2 )]
+transform = Transform( -0.415603, 0, -0.909546, 0, 1, 0, 0.909546, 0, -0.415603, 16.325, 0, 8.37527 )
+offset = 77.0616
+script = ExtResource( 1 )
+_speed = 5.0

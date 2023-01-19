@@ -2,10 +2,16 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public class BoomerangBoss3D : KinematicBody
+public class BoomerangBoss3D : KinematicBody, IDamageable
 {
+  [Signal]
+  public delegate void DeathSignal();
+
   [Export]
   private PackedScene _boomerangScene;
+
+  [Export]
+  private PackedScene _greenOrbScene;
 
   [Export]
   private float _throwInterval = 6;
@@ -13,12 +19,39 @@ public class BoomerangBoss3D : KinematicBody
   [Export]
   private float _boomerangSpeed = 200;
 
+  [Export]
+  private float _minBoomerangDistance = 2;
+
+  private HealthBar3D _healthBar;
   private Timer _throwTimer;
   private Spatial _target;
   private Area _throwCatchArea;
   // Dictionary<instance, wasThrown>
   private Dictionary<Boomerang3D, bool> _activeBoomerangs = new Dictionary<Boomerang3D, bool>();
   private int _maxActiveBoomerangs = 1;
+
+  [Export]
+  public int MaxHealth { get; set; } = 6;
+  public int Health { get; set; } = 6;
+
+  public void ApplyDamage(Node source, int amount)
+  {
+    if (source is Boomerang3D && ((Boomerang3D)source).IsOnFire)
+    {
+      Health -= amount;
+      _maxActiveBoomerangs++;
+      _throwTimer.WaitTime = _throwInterval / _maxActiveBoomerangs;
+    }
+
+    if (Health <= 0)
+    {
+      var orb = _greenOrbScene.Instance();
+      GetParent().AddChild(orb);
+
+      EmitSignal(nameof(DeathSignal));
+      QueueFree();
+    }
+  }
 
   public override void _Ready()
   {
@@ -31,6 +64,14 @@ public class BoomerangBoss3D : KinematicBody
     _throwTimer = this.GetExpectedNode<Timer>("ThrowTimer");
     _throwTimer.Connect("timeout", this, nameof(ThrowBoomerangAtTarget));
     _throwTimer.Start(_throwInterval);
+
+    _healthBar = this.GetExpectedNode<HealthBar3D>("HealthBar3D");
+  }
+
+  public override void _Process(float delta)
+  {
+    _healthBar.Health = Health;
+    _healthBar.MaxHealth = MaxHealth;
   }
 
   private void HandleAreaEntered(Area2D area)
@@ -39,6 +80,7 @@ public class BoomerangBoss3D : KinematicBody
     {
       // "Catch" boomerang.
       var boomerang = (Boomerang3D)area.Owner;
+      boomerang.Catch();
       _activeBoomerangs.Remove(boomerang);
       boomerang.QueueFree();
     }
@@ -62,21 +104,9 @@ public class BoomerangBoss3D : KinematicBody
     if (_target is IInvisible && ((IInvisible)_target).IsInvisible) return;
 
     var boomerang = _boomerangScene.Instance<Boomerang3D>();
-    var direction = GlobalTranslation.DirectionTo(_target.GlobalTranslation);
-    var distance = Math.Max(GlobalTranslation.DistanceTo(_target.GlobalTranslation) / 2, 50);
-    var angle = Mathf.Atan2(direction.y, direction.x) * 180 / Mathf.Pi - 180; // TODO: If I reverse x and y do I get the same result as -180?
-    var randomDirection = GD.Randf() < 0.5 ? -1 : 1;
-    var speed = _boomerangSpeed / distance * randomDirection;
-    var path = new BoomerangPath
-    {
-      InitialAngle = angle,
-      Radius = distance,
-      Speed = speed
-    };
-
+    boomerang.Translation = new Vector3(boomerang.Translation.x, 0.5f, boomerang.Translation.z);
     AddChild(boomerang);
-    boomerang.GlobalTranslation = direction * distance;
-    boomerang.Throw(path);
+    boomerang.ThrowAt(_target, _boomerangSpeed, _minBoomerangDistance);
 
     _activeBoomerangs.Add(boomerang, false);
   }

@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Diagnostics;
 
-public class Test3DPlayer : KinematicBody
+public class Test3DPlayer : KinematicBody, IDamageable, IInvisible
 {
   [Export]
   public float MaxSpeed { get; set; } = 800;
@@ -34,6 +34,9 @@ public class Test3DPlayer : KinematicBody
   [Export]
   public float Friction { get; set; } = 500;
 
+  [Export]
+  private PackedScene _soundGrenadeScene;
+
   public int MaxHealth { get => PlayerManager.MaxHealth; set => PlayerManager.MaxHealth = value; }
   public int Health { get => PlayerManager.Health; set => PlayerManager.Health = value; }
   public float Stamina { get => PlayerManager.Stamina; set => PlayerManager.Stamina = value; }
@@ -50,11 +53,13 @@ public class Test3DPlayer : KinematicBody
   private bool _canDodge = true;
   private bool _isDodging = false;
 
+  private Area _pickupArea;
   private FollowCamera3D _camera;
   private AnimationPlayer _animationPlayer;
 
   public override void _Ready()
   {
+    _pickupArea = this.GetExpectedNode<Area>("PickupArea");
     _camera = this.GetExpectedNode<FollowCamera3D>("../FollowCamera3D");
     _animationPlayer = this.GetExpectedNode<AnimationPlayer>("AnimationPlayer");
   }
@@ -125,6 +130,28 @@ public class Test3DPlayer : KinematicBody
     {
       HandleInteract();
     }
+
+    if (Input.IsActionJustPressed("throw"))
+    {
+      var grenade = _soundGrenadeScene.Instance<SoundGrenade>();
+      var mousePosition = GetViewport().GetMousePosition();
+      var camera = GetViewport().GetCamera();
+      var from = camera.ProjectRayOrigin(mousePosition);
+      var to = camera.ProjectRayNormal(mousePosition) * 1000;
+      var cursorPosition = new Plane(Vector3.Up, 0).IntersectRay(from, to);
+
+      if (cursorPosition.HasValue)
+      {
+        GetParent().AddChild(grenade);
+        grenade.GlobalTranslation = GlobalTranslation;
+        grenade.Throw(cursorPosition.Value);
+      }
+    }
+  }
+
+  public override void _UnhandledInput(InputEvent @event)
+  {
+    base._UnhandledInput(@event);
   }
 
   public override void _PhysicsProcess(float delta)
@@ -154,6 +181,60 @@ public class Test3DPlayer : KinematicBody
 
   private void HandleInteract()
   {
-    Debug.WriteLine(">> Handling interact");
+    foreach (Area area in _pickupArea.GetOverlappingAreas())
+    {
+      Debug.WriteLine($">> Handling interact with {area.Name}");
+      if (!IsInvisible && Carrying == null && area is ICarryable)
+      {
+        Debug.WriteLine($">> Picking up carryable {area.Name}");
+        var parent = area.GetParent();
+        parent.RemoveChild(area);
+        CallDeferred("add_child", area);
+        area.Translation = new Vector3(0, 3, 0);
+        Carrying = area;
+        return;
+      }
+      else if (area is IInteractable)
+      {
+        Debug.WriteLine($">> Interacting with interactable {area.Name}");
+        ((IInteractable)area).Interact();
+        return;
+      }
+    }
+
+    foreach (PhysicsBody body in _pickupArea.GetOverlappingBodies())
+    {
+      if (body is Campfire3D)
+      {
+        Debug.WriteLine($">> Interacting with campfire");
+        var campfire = (Campfire3D)body;
+
+        if (campfire.GetNumberOfLogs() < 3 && Carrying is Log3D)
+        {
+          var wasSuccessful = campfire.Interact(Carrying);
+
+          if (wasSuccessful)
+          {
+            Carrying = null;
+          }
+        }
+        else if (campfire.GetNumberOfLogs() == 3 && !campfire.IsLit)
+        {
+          campfire.Interact();
+        }
+        return;
+      }
+    }
+
+    // If there's nothing to interact with or pick up, check if there's anything to drop.
+    if (Carrying != null)
+    {
+      DropCarriedObject();
+    }
+  }
+
+  public void ApplyDamage(Node source, int amount)
+  {
+    Health -= amount;
   }
 }

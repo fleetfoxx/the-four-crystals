@@ -1,27 +1,30 @@
 using Godot;
 using System;
+using System.Diagnostics;
 
-public class Boomerang3D : KinematicBody
+public class Boomerang3D : Path, IFlammable
 {
   public bool IsOnFire { get; set; } = false;
+  public bool IsThrown { get; private set; } = false;
 
-  private BoomerangPath _path = null;
+  private float _speed;
   private Area _collider;
   private MeshInstance _mesh;
+  private PathFollow _pathFollow;
 
   public override void _Ready()
   {
-    _collider = this.GetExpectedNode<Area>("Collider");
+    _collider = this.GetExpectedNode<Area>("PathFollow/Collider");
     _collider.Connect("area_entered", this, nameof(HandleAreaEntered));
     _collider.Connect("body_entered", this, nameof(HandleBodyEntered));
 
-    _mesh = this.GetExpectedNode<MeshInstance>("Mesh");
+    _mesh = this.GetExpectedNode<MeshInstance>("PathFollow/Collider/Mesh");
+
+    _pathFollow = this.GetExpectedNode<PathFollow>("PathFollow");
   }
 
   public override void _Process(float delta)
   {
-    base._Process(delta);
-
     if (IsOnFire)
     {
       var material = new SpatialMaterial();
@@ -38,23 +41,35 @@ public class Boomerang3D : KinematicBody
 
   public override void _PhysicsProcess(float delta)
   {
-    base._PhysicsProcess(delta);
-
-    if (_path != null)
+    if (IsThrown)
     {
-      // TODO: update to 3D rotation
-      var newY = RotationDegrees.y + _path.Speed * delta;
-      RotationDegrees = new Vector3(RotationDegrees.x, newY, RotationDegrees.z);
+      _pathFollow.Offset += _speed * delta;
     }
   }
 
-  public void Throw(BoomerangPath path)
+  public void ThrowAt(Spatial target, float speed, float minDistance = 1)
   {
-    // TODO
-    // _path = path;
-    // _collider = this.GetExpectedNode<Area>("Collider");
-    // _collider.Position = new Vector2(path.Radius, 0);
-    // RotationDegrees = path.InitialAngle;
+    IsThrown = true;
+
+    var direction = GlobalTranslation.DirectionTo(target.GlobalTranslation);
+    var distance = GlobalTranslation.DistanceTo(target.GlobalTranslation);
+
+    if (distance < minDistance)
+    {
+      distance = minDistance;
+    }
+
+    _speed = speed / distance;
+    Scale = new Vector3(distance, distance, distance);
+    _pathFollow.Scale = Scale.Inverse();
+    var lookAt = new Vector3(target.GlobalTranslation.x, GlobalTranslation.y, target.GlobalTranslation.z);
+    LookAt(lookAt, Vector3.Up);
+  }
+
+  public void Catch()
+  {
+    IsThrown = false;
+    _speed = 0;
   }
 
   private void HandleAreaEntered(Area2D area)

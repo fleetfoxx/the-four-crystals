@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Levels/NoiseBossPrototype3D/NoiseMakerPathFollow.cs" type="Script" id=2]
+[ext_resource path="res://Scenes/NoiseMaker/NoiseMaker.tscn" type="PackedScene" id=3]
+
+[node name="NoiseMakerPathFollow" type="PathFollow"]
+script = ExtResource( 2 )
+_speed = 5.0
+
+[node name="NoiseMaker" parent="." instance=ExtResource( 3 )]

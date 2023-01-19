@@ -84,7 +84,7 @@ public class MovementTestBall : KinematicBody2D, IDamageable
   {
     foreach (Area2D area in _pickupArea.GetOverlappingAreas())
     {
-      if (Carrying == null && area is ICarrayble)
+      if (Carrying == null && area is ICarryable)
       {
         var parent = area.GetParent();
         parent.RemoveChild(area);

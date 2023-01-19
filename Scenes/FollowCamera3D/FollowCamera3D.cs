@@ -12,7 +12,7 @@ public class FollowCamera3D : Camera
 
   public override void _Process(float delta)
   {
-    var targetTranslation = Target?.GlobalTranslation ?? Vector3.Zero;
+    var targetTranslation = Target?.GlobalTranslation ?? Vector3.Forward;
     GlobalTranslation = targetTranslation + TranslationOffset;
 
     LookAt(targetTranslation, Vector3.Up);
